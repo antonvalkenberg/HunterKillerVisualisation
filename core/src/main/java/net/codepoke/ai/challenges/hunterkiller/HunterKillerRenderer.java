@@ -1,26 +1,25 @@
 package net.codepoke.ai.challenges.hunterkiller;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
-
-import net.codepoke.ai.challenge.hunterkiller.Board;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
-import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction.Move;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.Bomb;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.BombMan;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.Coin;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.Fire;
+import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.GameObject;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.Item;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.Item.UpgradeType;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.Wall;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Door;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Floor;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Space;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Wall;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Infected;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Medic;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Soldier;
 import net.codepoke.ai.challenges.hunterkiller.ui.MatchRenderer;
 import net.codepoke.ai.challenges.hunterkiller.ui.MatchVisualization;
 
-public class HunterKillerRenderer extends MatchRenderer<HunterKillerState, HunterKillerAction> {
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+public class HunterKillerRenderer
+		extends MatchRenderer<HunterKillerState, HunterKillerAction> {
 
 	// The size at which the tiles will be displayed. (our tileset images are 24px
 	public static int TILE_SIZE = 24;
@@ -31,125 +30,81 @@ public class HunterKillerRenderer extends MatchRenderer<HunterKillerState, Hunte
 
 	@Override
 	public void onDraw(Batch batch, float parentAlpha) {
-		
+
 		if (state == null)
 			return;
-		
+
 		float x = getX(), y = getY();
-		
-		Board board = state.getBoard();
-		Array<GameObject>[] objects = board.getObjects();
-		int[] spawnLocations = board.getSpawnLocations();
 
-		for (int i = 0; i < board.getWidth(); i++) {
-			for (int j = 0; j < board.getHeight(); j++) {
-				int idx = board.toIndex(i, j);
-				Array<GameObject> tile = objects[idx];
+		Map map = state.getMap();
+		GameObject[][] objects = map.getMapContent();
+		// int[] spawnLocations = board.getSpawnLocations();
 
-				// Draw the floor and spawn
-				batch.draw(skin.getRegion("game/floor"), i * TILE_SIZE + x, j * TILE_SIZE + y, TILE_SIZE, TILE_SIZE);
-				
-				for (int l = 0; l < spawnLocations.length; l++) {
-					if(spawnLocations[l] == idx) {
-						batch.draw(skin.getRegion("ingame/spawn_" + (l + 1)), i * TILE_SIZE + x, j * TILE_SIZE + y, TILE_SIZE, TILE_SIZE);
-					}
-				}
+		// TODO Get a collection of the current player's combined field-of-view, we need this to make certain tiles
+		// shaded
+		// Like so:
+		// Color clr = batch.getColor();
+		// if (bombMan.isInvulnerable()) batch.setColor(Color.GRAY);
+		// batch.setColor(clr);
 
-				for (int k = 0; k < tile.size; k++) {
-					GameObject gameObject = tile.get(k);
+		for (int i = 0; i < map.getMapWidth(); i++) {
+			for (int j = 0; j < map.getMapHeight(); j++) {
+				int idx = map.toPosition(i, j);
+				GameObject[] tile = objects[idx];
 
+				// Handle the two levels of the Map
+				if (tile[Map.INTERNAL_MAP_FEATURE_INDEX] != null) {
+					// Draw MapFeatures
+					GameObject object = tile[Map.INTERNAL_MAP_FEATURE_INDEX];
 					//@formatter:off
-					if (gameObject instanceof Fire) {
-						// How can we most dastardly avoid String allocation?
-						int options = 0;
-						options |= board.containsType(Fire.class, board.getLocationInDirection(idx, Move.DOWN)) ? 1 : 0;
-						options |= board.containsType(Fire.class, board.getLocationInDirection(idx, Move.LEFT))  ? 2 : 0;
-						options |= board.containsType(Fire.class, board.getLocationInDirection(idx, Move.UP))  ? 4 : 0;
-						options |= board.containsType(Fire.class, board.getLocationInDirection(idx, Move.RIGHT))  ? 8: 0;
-						
-						String fireImg = null;
-						switch(options) {
-							// Clean Orthogonals
-							case 1 : fireImg = "game/explosion-top"; break;
-							case 2 : fireImg = "game/explosion-right"; break;
-							case 4 : fireImg = "game/explosion-bottom"; break;
-							case 8 : fireImg = "game/explosion-left"; break;
-							// Two-Ways
-							case 3 : fireImg = "game/explosion-right-top"; break;
-							case 5 : fireImg = "game/explosion-vertical"; break;
-							case 6 : fireImg = "game/explosion-right-bottom"; break;
-							case 9 : fireImg = "game/explosion-left-top"; break;
-							case 10 : fireImg = "game/explosion-horizontal"; break;
-							case 12 : fireImg = "game/explosion-left-bottom"; break;
-							// Three-Ways & rest
-							default : fireImg = "game/explosion-center"; break;
-						}
-						
-						batch.draw(skin.getRegion(fireImg),
-									i * TILE_SIZE + x,
-									j * TILE_SIZE + y,
-									TILE_SIZE,
-									TILE_SIZE);
+					if (object instanceof Base) {
 
-					} else if (gameObject instanceof Coin) {
-						Coin coin = (Coin) gameObject;
-						batch.draw(	skin.getRegion(coin.isCoolingDown() ? "game/coin-cooldown" : "game/coin"),
+					} else if (object instanceof Door) {
+						// Check for open/closed
+						Door door = (Door) object;
+						batch.draw(skin.getRegion(door.isOpen() ? "" : ""),
 									i * TILE_SIZE + x,
 									j * TILE_SIZE + y,
 									TILE_SIZE,
 									TILE_SIZE);
-					} else if (gameObject instanceof Bomb) {
-						batch.draw(skin.getRegion("game/bomb"), i * TILE_SIZE + x, j * TILE_SIZE + y, TILE_SIZE, TILE_SIZE);
-					} else if (gameObject instanceof Wall) {
-						Wall wall = (Wall) gameObject;
-						batch.draw(	skin.getRegion(wall.isDestructible() ? "game/wall-destroyable" : "game/wall-non-destroyable"),
-									i * TILE_SIZE + x,
-									j * TILE_SIZE + y,
-									TILE_SIZE,
-									TILE_SIZE);
-					} else if (gameObject instanceof Item) {
-						Item item = (Item) gameObject;
-						batch.draw(	skin.getRegion(item.getUpgradeType() == UpgradeType.BOMB_COUNT	? "game/powerup-bomb"
-																									: "game/powerup-flame"),
-									i * TILE_SIZE + x,
-									j * TILE_SIZE + y,
-									TILE_SIZE,
-									TILE_SIZE);
-					} else if (gameObject instanceof BombMan) {
-						BombMan bombMan = (BombMan) gameObject;
+					} else if (object instanceof Floor) {
 
-						Color clr = batch.getColor();
-						if (bombMan.isInvulnerable()) {
-							batch.setColor(Color.GRAY);
-						}
+					} else if (object instanceof Space) {
 
-						batch.draw(	skin.getRegion(bombMan.isDead()	? "ingame/grave_" + (bombMan.getOwner() + 1)
-																	: "ingame/player_" + (bombMan.getOwner() + 1)),
-									i * TILE_SIZE + x,
-									j * TILE_SIZE + y,
-									TILE_SIZE,
-									TILE_SIZE);
+					} else if (object instanceof Wall) {
 
-						batch.setColor(clr);
-					} 
-					
+					}
+					//@formatter:on
+				} else {
+					// This is a problem, there should always be a MapFeature on a tile
+				}
+				if (tile[Map.INTERNAL_MAP_UNIT_INDEX] != null) {
+					// Draw Units
+					GameObject object = tile[Map.INTERNAL_MAP_UNIT_INDEX];
+					//@formatter:off
+					if (object instanceof Infected) {
+
+					} else if (object instanceof Medic) {
+
+					} else if (object instanceof Soldier) {
+
+					}
 					//@formatter:on
 				}
 			}
 		}
-
 	}
 
 	@Override
 	public float getPrefWidth() {
-		return (state != null ? state.getBoard()
-									.getWidth() * TILE_SIZE : 0) ;
+		return (state != null ? state.getMap()
+										.getMapWidth() * TILE_SIZE : 0);
 	}
 
 	@Override
 	public float getPrefHeight() {
-		return (state != null ? state.getBoard()
-									.getHeight() * TILE_SIZE : 0);
+		return (state != null ? state.getMap()
+										.getMapHeight() * TILE_SIZE : 0);
 	}
 
 }

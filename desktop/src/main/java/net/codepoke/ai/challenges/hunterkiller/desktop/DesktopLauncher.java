@@ -35,6 +35,7 @@ public class DesktopLauncher {
 		settings.maxHeight = 2048;
 		settings.maxWidth = 2048;
 		settings.useIndexes = false;
+		// TODO fix problem with TexturePacker not having write access
 		// TexturePacker.process(settings, "imgs/", "", "game.atlas");
 
 		// Start up the game
@@ -48,10 +49,10 @@ public class DesktopLauncher {
 		// testStream(listener, "localhost:9000/competition/stream_match" , "HunterKiller" ,
 		// "HunterKiller-glv3jsudnt9gbuvavqtesuhl5k-6");
 		simulateStream(listener);
-
 	}
 
-	private static void testStream(final HunterKillerVisualization listener, final String server, final String gameName, final String matchID) {
+	private static void testStream(final HunterKillerVisualization listener, final String server, final String gameName,
+			final String matchID) {
 		new Thread() {
 
 			public void run() {
@@ -110,6 +111,11 @@ public class DesktopLauncher {
 				GameRules rules = new HunterKillerRules();
 				TestBot bot = new TestBot(); // Instantiate your bot here
 
+				Json json = new Json();
+
+				listener.parseMessage(vis.getLastState(), json.toJson(state.getPlayers()));		// Players
+				listener.parseMessage(vis.getLastState(), json.toJson(Array.with(orgState)));	// Initial State
+
 				// The following snippet will run a match with the given AI for all player seats until the match is
 				// finished or an error occurs.
 				// This would fail if your AI assumes it always operates in the same seat; instead of querying
@@ -118,13 +124,11 @@ public class DesktopLauncher {
 				do {
 					HunterKillerAction action = bot.handle(state);
 					actions.add(action);
+					// Alternatively, send the action immediately: listener.parseMessage(vis.getLastState(),
+					// json.toJson(action));
 					result = rules.handle(state, action);
 				} while (!result.isFinished() && result.isAccepted());
 
-				Json json = new Json();
-
-				listener.parseMessage(vis.getLastState(), json.toJson(state.getPlayers()));			// Players
-				listener.parseMessage(vis.getLastState(), json.toJson(Array.with(orgState)));										// Initial State
 				listener.parseMessage(vis.getLastState(), json.toJson(actions));
 
 			}
