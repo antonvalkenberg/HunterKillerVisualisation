@@ -11,13 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.utils.Align;
 
-public class MatchControls extends Table {
-	
+public class MatchControls
+		extends Table {
+
 	MatchVisualization parent;
 
 	// The skin for this UI Widget
@@ -43,7 +43,7 @@ public class MatchControls extends Table {
 	private float currentDt = 0;
 
 	public MatchControls(MatchVisualization parent, Skin skin) {
-		
+
 		this.parent = parent;
 		this.skin = skin;
 
@@ -76,7 +76,8 @@ public class MatchControls extends Table {
 							int newRound = Integer.parseInt(text);
 							timeline.setValue(newRound - 1);
 							Gdx.graphics.requestRendering();
-						} catch (Exception e) {	}
+						} catch (Exception e) {
+						}
 					}
 
 					@Override
@@ -203,9 +204,9 @@ public class MatchControls extends Table {
 		bottomControls.add(timeline)
 						.expandX()
 						.width(Value.percentWidth(1, parent.board));
-		
+
 		bottomControls.row();
-		
+
 		bottomControls.add(controls)
 						.padTop(-8)
 						.center()
@@ -227,9 +228,9 @@ public class MatchControls extends Table {
 				timeline.setValue(timeline.getValue() + playbackSpeed);
 			}
 		}
-		
+
 		// If we are playing back, request the next render
-		if(playingBack)
+		if (playingBack)
 			Gdx.graphics.requestRendering();
 	}
 

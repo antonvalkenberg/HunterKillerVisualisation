@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 
@@ -23,7 +23,8 @@ import com.badlogic.gdx.utils.Scaling;
  * 
  * @author GJ Roelofs <gj.roelofs@codepoke.net>
  */
-public class MatchStatistics extends Table {
+public class MatchStatistics
+		extends Table {
 
 	MatchVisualization parent;
 
@@ -93,7 +94,7 @@ public class MatchStatistics extends Table {
 			barScores.clear();
 			scoreAndNames.clear();
 			scoreBar.clear();
-			
+
 			scoreBoard.clear();
 			scoreBar.clear();
 
@@ -149,9 +150,11 @@ public class MatchStatistics extends Table {
 
 		// Update the labels / images
 		for (int i = 0; i < playerNames.length; i++) {
-			
+
 			scoreAndNames.get(i)
-							.setText(i % 2 == 0 ? scores[i] + " : " + playerNames[i]  : playerNames[i] + " : " + scores[i]);	// Can't use String.format
+							.setText(i % 2 == 0 ? scores[i] + " : " + playerNames[i] : playerNames[i] + " : " + scores[i]);	// Can't
+																															// use
+																															// String.format
 
 			int score = scores[i];
 			if (min == 0 && score > min) {

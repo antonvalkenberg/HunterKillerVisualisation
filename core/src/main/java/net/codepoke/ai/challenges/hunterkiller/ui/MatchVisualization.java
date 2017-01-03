@@ -1,5 +1,11 @@
 package net.codepoke.ai.challenges.hunterkiller.ui;
 
+import net.codepoke.ai.Action;
+import net.codepoke.ai.GameRules;
+import net.codepoke.ai.State;
+import net.codepoke.ai.network.MatchMessageParser;
+import net.codepoke.ai.network.MatchMessageParser.StateCreationListener;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,18 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import net.codepoke.ai.Action;
-import net.codepoke.ai.GameRules;
-import net.codepoke.ai.State;
-import net.codepoke.ai.network.MatchMessageParser;
-import net.codepoke.ai.network.MatchMessageParser.StateCreationListener;
-
-public abstract class MatchVisualization<S extends State, A extends Action> extends ApplicationAdapter {
+public abstract class MatchVisualization<S extends State, A extends Action>
+		extends ApplicationAdapter {
 
 	// The root on which we layout the UI and rendering of the state.
 	Stage stage;
@@ -97,7 +98,7 @@ public abstract class MatchVisualization<S extends State, A extends Action> exte
 		boardBase.setBackground(new NinePatchDrawable(uiSkin.getPatch("ui/panel_btn_brown")));
 		boardBase.stack(board, errorMessage)
 					.pad(10);
-		
+
 		rootTable.add(statistics)
 					.expandX()
 					.fill()
@@ -140,7 +141,7 @@ public abstract class MatchVisualization<S extends State, A extends Action> exte
 				@Override
 				public void run() {
 					Gdx.app.getGraphics()
-							.setDisplayMode((int) rootTable.getPrefWidth(), (int) rootTable.getPrefHeight(), false);
+							.setWindowedMode((int) rootTable.getPrefWidth(), (int) rootTable.getPrefHeight());
 				}
 
 			});
@@ -194,7 +195,7 @@ public abstract class MatchVisualization<S extends State, A extends Action> exte
 		if (states.size == 1) {
 			stateChange(state);
 		}
-		
+
 		Gdx.graphics.requestRendering();
 	}
 

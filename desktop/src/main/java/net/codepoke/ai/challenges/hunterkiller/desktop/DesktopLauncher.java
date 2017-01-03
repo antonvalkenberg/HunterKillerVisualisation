@@ -36,7 +36,7 @@ public class DesktopLauncher {
 		settings.maxWidth = 2048;
 		settings.useIndexes = false;
 		// TODO fix problem with TexturePacker not having write access
-		// TexturePacker.process(settings, "imgs/", "", "game.atlas");
+		TexturePacker.process(settings, "imgs/", "", "game.atlas");
 
 		// Start up the game
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -106,15 +106,15 @@ public class DesktopLauncher {
 				}
 
 				Array<HunterKillerAction> actions = new Array<HunterKillerAction>();
-				HunterKillerState state = new HunterKillerStateFactory().generateInitialState(new String[] { "A", "B", "C", "D" }, null);
+				HunterKillerState state = new HunterKillerStateFactory().generateInitialState(new String[] { "A", "B" }, null);
 				HunterKillerState orgState = state.copy();
 				GameRules rules = new HunterKillerRules();
 				TestBot bot = new TestBot(); // Instantiate your bot here
 
 				Json json = new Json();
 
-				listener.parseMessage(vis.getLastState(), json.toJson(state.getPlayers()));		// Players
-				listener.parseMessage(vis.getLastState(), json.toJson(Array.with(orgState)));	// Initial State
+				listener.parseMessage(vis.getLastState(), json.toJson(state.getPlayers())); // Players
+				listener.parseMessage(vis.getLastState(), json.toJson(Array.with(orgState))); // Initial State
 
 				// The following snippet will run a match with the given AI for all player seats until the match is
 				// finished or an error occurs.
