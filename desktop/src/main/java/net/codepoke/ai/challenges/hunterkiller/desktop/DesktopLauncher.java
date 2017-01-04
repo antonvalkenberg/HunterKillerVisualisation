@@ -35,8 +35,7 @@ public class DesktopLauncher {
 		settings.maxHeight = 2048;
 		settings.maxWidth = 2048;
 		settings.useIndexes = false;
-		// TODO fix problem with TexturePacker not having write access
-		TexturePacker.process(settings, "imgs/", "", "game.atlas");
+		// TexturePacker.process(settings, "imgs/", System.getProperty("user.dir"), "game.atlas");
 
 		// Start up the game
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
@@ -106,7 +105,7 @@ public class DesktopLauncher {
 				}
 
 				Array<HunterKillerAction> actions = new Array<HunterKillerAction>();
-				HunterKillerState state = new HunterKillerStateFactory().generateInitialState(new String[] { "A", "B" }, null);
+				HunterKillerState state = new HunterKillerStateFactory().generateInitialState(new String[] { "A", "B", "C", "D" }, null);
 				HunterKillerState orgState = state.copy();
 				GameRules rules = new HunterKillerRules();
 				TestBot bot = new TestBot(); // Instantiate your bot here
