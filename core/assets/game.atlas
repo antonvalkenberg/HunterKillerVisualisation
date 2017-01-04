@@ -1,311 +1,74 @@
 
 game.png
-size: 512,64
+size: 256,32
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-game/bomb
-  rotate: false
-  xy: 2, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/coin
+map/base_p1
   rotate: false
   xy: 2, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-game/coin-cooldown
-  rotate: false
-  xy: 444, 36
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-game/explosion-bottom
-  rotate: false
-  xy: 36, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-center
-  rotate: false
-  xy: 70, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-horizontal
-  rotate: false
-  xy: 104, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-left
-  rotate: false
-  xy: 138, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-left-bottom
-  rotate: false
-  xy: 172, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-left-top
-  rotate: false
-  xy: 206, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-right
-  rotate: false
-  xy: 240, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-right-bottom
-  rotate: false
-  xy: 274, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-right-top
-  rotate: false
-  xy: 308, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-top
-  rotate: false
-  xy: 342, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/explosion-vertical
-  rotate: false
-  xy: 376, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/flame
-  rotate: false
-  xy: 410, 28
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-game/floor
+map/base_p2
   rotate: false
   xy: 28, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-game/player
-  rotate: false
-  xy: 470, 36
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-game/player-p2
+map/base_p3
   rotate: false
   xy: 54, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-game/player-p3
+map/base_p4
   rotate: false
   xy: 80, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-game/player-p4
+map/door_closed
   rotate: false
   xy: 106, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-game/powerup-bomb
+map/door_open
   rotate: false
   xy: 132, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-game/powerup-flame
+map/floor
   rotate: false
   xy: 158, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-game/spawn
+map/space
   rotate: false
   xy: 184, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-game/spawn-p2
+map/wall_single
   rotate: false
   xy: 210, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-game/spawn-p3
-  rotate: false
-  xy: 236, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-game/spawn-p4
-  rotate: false
-  xy: 262, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-game/wall-destroyable
-  rotate: false
-  xy: 288, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-game/wall-destroyable2
-  rotate: false
-  xy: 314, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-game/wall-destroyable4
-  rotate: false
-  xy: 340, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-game/wall-non-destroyable
-  rotate: false
-  xy: 366, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 
 game2.png
-size: 512,32
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-ingame/grave_1
-  rotate: false
-  xy: 2, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/grave_2
-  rotate: false
-  xy: 28, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/grave_3
-  rotate: false
-  xy: 54, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/grave_4
-  rotate: false
-  xy: 80, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/player_1
-  rotate: false
-  xy: 106, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/player_2
-  rotate: false
-  xy: 132, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/player_3
-  rotate: false
-  xy: 158, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/player_4
-  rotate: false
-  xy: 184, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/spawn_1
-  rotate: false
-  xy: 210, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/spawn_2
-  rotate: false
-  xy: 236, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/spawn_3
-  rotate: false
-  xy: 262, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-ingame/spawn_4
-  rotate: false
-  xy: 288, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-
-game3.png
 size: 256,128
 format: RGBA8888
 filter: Nearest,Nearest
@@ -479,7 +242,7 @@ ui/panel_btn_white
   offset: 0, 0
   index: -1
 
-game4.png
+game3.png
 size: 256,32
 format: RGBA8888
 filter: Nearest,Nearest
@@ -590,7 +353,7 @@ ui/bars/bar_right_4
   offset: 0, 0
   index: -1
 
-game5.png
+game4.png
 size: 64,32
 format: RGBA8888
 filter: Nearest,Nearest
@@ -610,7 +373,7 @@ ui/btns/btn_up
   offset: 0, 0
   index: -1
 
-game6.png
+game5.png
 size: 512,32
 format: RGBA8888
 filter: Nearest,Nearest
@@ -739,5 +502,95 @@ ui/controls/start_over
   xy: 149, 2
   size: 19, 20
   orig: 19, 20
+  offset: 0, 0
+  index: -1
+
+game6.png
+size: 512,32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+units/infected_p1
+  rotate: false
+  xy: 2, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/infected_p2
+  rotate: false
+  xy: 28, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/infected_p3
+  rotate: false
+  xy: 54, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/infected_p4
+  rotate: false
+  xy: 80, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/medic_p1
+  rotate: false
+  xy: 106, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/medic_p2
+  rotate: false
+  xy: 132, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/medic_p3
+  rotate: false
+  xy: 158, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/medic_p4
+  rotate: false
+  xy: 184, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/soldier_p1
+  rotate: false
+  xy: 210, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/soldier_p2
+  rotate: false
+  xy: 236, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/soldier_p3
+  rotate: false
+  xy: 262, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+units/soldier_p4
+  rotate: false
+  xy: 288, 2
+  size: 24, 24
+  orig: 24, 24
   offset: 0, 0
   index: -1
