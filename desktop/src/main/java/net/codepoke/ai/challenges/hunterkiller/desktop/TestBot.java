@@ -30,7 +30,7 @@ public class TestBot
 
 		Player player = state.getPlayer(state.getCurrentPlayer());
 
-		for (Unit unit : player.getSquad()) {
+		for (Unit unit : player.getUnits(state.getMap())) {
 			List<UnitOrder> rotations = new ArrayList<UnitOrder>();
 			rotations.add(new UnitOrder(unit, UnitOrderType.ROTATE_EAST, actionIndex));
 			rotations.add(new UnitOrder(unit, UnitOrderType.ROTATE_WEST, actionIndex));
@@ -42,4 +42,5 @@ public class TestBot
 
 		return random;
 	}
+
 }

@@ -49,7 +49,9 @@ public class HunterKillerRenderer
 
 		// Get a collection of the current player's combined field-of-view, we need this to make certain tiles shaded
 		HashSet<MapLocation> fovSet = state.getPlayer(state.getCurrentPlayer())
-											.getCombinedFieldOfView();
+											.getCombinedFieldOfView(map);
+
+		// TODO translate coordinates? cause I'm using different orientation.
 
 		// Go through the map
 		for (int i = 0; i < map.getMapWidth(); i++) {
