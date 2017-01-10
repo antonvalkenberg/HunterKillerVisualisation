@@ -2,6 +2,7 @@ package net.codepoke.ai.challenges.hunterkiller;
 
 import java.util.HashSet;
 
+import net.codepoke.ai.challenge.hunterkiller.Constants;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
@@ -79,15 +80,15 @@ public class HunterKillerRenderer
 				float tileHeight = TILE_SIZE_DRAW;
 
 				// Handle the two levels of the Map, MapFeatures first, since Units are drawn on top of those
-				if (tile[Map.INTERNAL_MAP_FEATURE_INDEX] != null) {
+				if (tile[Constants.MAP_INTERNAL_FEATURE_INDEX] != null) {
 					// Draw MapFeatures
-					GameObject object = tile[Map.INTERNAL_MAP_FEATURE_INDEX];
+					GameObject object = tile[Constants.MAP_INTERNAL_FEATURE_INDEX];
 					//@formatter:off
 					if (object instanceof Base) {
 						//Draw a different color based on team
 						Base base = (Base)object;
 						String baseImg = null;
-						switch(base.getPlayerID()) {
+						switch(base.getControllingPlayerID()) {
 							case 0: baseImg = "map/base_p1"; break;
 							case 1: baseImg = "map/base_p2"; break;
 							case 2: baseImg = "map/base_p3"; break;
@@ -111,9 +112,9 @@ public class HunterKillerRenderer
 				} else {
 					// This is a problem, there should always be a MapFeature on a tile
 				}
-				if (tile[Map.INTERNAL_MAP_UNIT_INDEX] != null) {
+				if (tile[Constants.MAP_INTERNAL_UNIT_INDEX] != null) {
 					// Draw Units
-					Unit unit = (Unit) tile[Map.INTERNAL_MAP_UNIT_INDEX];
+					Unit unit = (Unit) tile[Constants.MAP_INTERNAL_UNIT_INDEX];
 					// Determine the rotation we need to apply
 					Direction unitOrientation = unit.getOrientation();
 					float rotation = Math.abs(unitOrientation.angle - 180);
@@ -122,7 +123,7 @@ public class HunterKillerRenderer
 					if (unit instanceof Infected) {
 						Infected infected = (Infected)unit;
 						String infectedImg = null;
-						switch(infected.getSquadPlayerID()) {
+						switch(infected.getControllingPlayerID()) {
 							case 0: infectedImg = "units/infected_p1"; break;
 							case 1: infectedImg = "units/infected_p2"; break;
 							case 2: infectedImg = "units/infected_p3"; break;
@@ -134,7 +135,7 @@ public class HunterKillerRenderer
 						//Draw a different color based on team
 						Medic medic = (Medic)unit;
 						String medicImg = null;
-						switch(medic.getSquadPlayerID()) {
+						switch(medic.getControllingPlayerID()) {
 							case 0: medicImg = "units/medic_p1"; break;
 							case 1: medicImg = "units/medic_p2"; break;
 							case 2: medicImg = "units/medic_p3"; break;
@@ -146,7 +147,7 @@ public class HunterKillerRenderer
 						//Draw a different color based on team
 						Soldier soldier = (Soldier)unit;
 						String soldierImg = null;
-						switch(soldier.getSquadPlayerID()) {
+						switch(soldier.getControllingPlayerID()) {
 							case 0: soldierImg = "units/soldier_p1"; break;
 							case 1: soldierImg = "units/soldier_p2"; break;
 							case 2: soldierImg = "units/soldier_p3"; break;
