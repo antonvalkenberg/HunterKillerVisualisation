@@ -107,7 +107,7 @@ public class DesktopLauncher {
 				Array<HunterKillerAction> actions = new Array<HunterKillerAction>();
 				HunterKillerState state = new HunterKillerStateFactory().generateInitialState(new String[] { "A", "B", "C", "D" }, null);
 				HunterKillerState orgState = state.copy();
-				GameRules rules = new HunterKillerRules();
+				GameRules<HunterKillerState, HunterKillerAction> rules = new HunterKillerRules();
 				TestBot bot = new TestBot(); // Instantiate your bot here
 
 				Json json = new Json();
