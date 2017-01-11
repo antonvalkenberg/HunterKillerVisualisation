@@ -7,7 +7,6 @@ import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.MapLocation;
-import net.codepoke.ai.challenge.hunterkiller.enums.Direction;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.GameObject;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Door;
@@ -52,13 +51,14 @@ public class HunterKillerRenderer
 		HashSet<MapLocation> fovSet = state.getPlayer(state.getCurrentPlayer())
 											.getCombinedFieldOfView(map);
 
-		// TODO translate coordinates? cause I'm using different orientation.
-
 		// Go through the map
-		for (int i = 0; i < map.getMapWidth(); i++) {
-			for (int j = 0; j < map.getMapHeight(); j++) {
+		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
+			for (int yCoord = 0; yCoord < map.getMapHeight(); yCoord++) {
+				// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
+				int flippedY = (map.getMapHeight() - 1) - yCoord;
+
 				// Check if this location should be tinted
-				boolean tinted = !fovSet.contains(new MapLocation(i, j));
+				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
 				// Save the original color, so we can set it back to this later
 				Color originalColor = batch.getColor();
 				// Change the color if we need to tint this location
@@ -67,17 +67,19 @@ public class HunterKillerRenderer
 				}
 
 				// Get the objects on this tile of the map
-				GameObject[] tile = objects[map.toPosition(i, j)];
+				GameObject[] tile = objects[map.toPosition(xCoord, flippedY)];
 
 				// Define some draw locations
-				float drawX = i * TILE_SIZE_DRAW + x;
-				float drawY = j * TILE_SIZE_DRAW + y;
+				float drawX = xCoord * TILE_SIZE_DRAW + x;
+				float drawY = yCoord * TILE_SIZE_DRAW + y;
 				float originX = TILE_SIZE_DRAW / 2f;
 				float originY = TILE_SIZE_DRAW / 2f;
 				float scaleX = 1;
 				float scaleY = 1;
 				float tileWidth = TILE_SIZE_DRAW;
 				float tileHeight = TILE_SIZE_DRAW;
+				float drawTextY = drawY + TILE_SIZE_DRAW;
+				float drawTextYHalf = drawY + TILE_SIZE_DRAW / 2f;
 
 				// Handle the two levels of the Map, MapFeatures first, since Units are drawn on top of those
 				if (tile[Constants.MAP_INTERNAL_FEATURE_INDEX] != null) {
@@ -96,6 +98,10 @@ public class HunterKillerRenderer
 							default: baseImg = "map/base_p4"; break;
 						}
 						batch.draw(skin.getRegion(baseImg), drawX, drawY, tileWidth, tileHeight);
+						
+						//Draw the player's resource amount
+						int resource = state.getPlayer(base.getControllingPlayerID()).getResource();
+						skin.getFont("default-font").draw(batch, "" +  resource, drawX, drawTextY);
 					} else if (object instanceof Door) {
 						// Check for open/closed
 						Door door = (Door)object;
@@ -115,9 +121,12 @@ public class HunterKillerRenderer
 				if (tile[Constants.MAP_INTERNAL_UNIT_INDEX] != null) {
 					// Draw Units
 					Unit unit = (Unit) tile[Constants.MAP_INTERNAL_UNIT_INDEX];
-					// Determine the rotation we need to apply
-					Direction unitOrientation = unit.getOrientation();
-					float rotation = Math.abs(unitOrientation.angle - 180);
+
+					// Get the rotation we need to give while drawing, note that a rotation of 0 is the same as the
+					// sprite stands in the file (which is facing left, or WEST).
+					// These angles are defined in Direction through .getLibgdxRotationAngle()
+					float rotation = unit.getOrientation()
+											.getLibgdxRotationAngle();
 
 					//@formatter:off
 					if (unit instanceof Infected) {
@@ -156,6 +165,15 @@ public class HunterKillerRenderer
 						}
 						batch.draw(skin.getRegion(soldierImg), drawX, drawY, originX, originY, tileWidth, tileHeight, scaleX, scaleY, rotation);
 					}
+					
+					//Draw the unit's HP and cooldown
+					int hp = unit.getHpCurrent();
+					batch.setColor(Color.RED);
+					skin.getFont("kenny-8-font").draw(batch, "hp: " + hp, drawX, drawTextYHalf);
+					int cd = unit.getSpecialAttackCooldown();
+					batch.setColor(Color.BLUE);
+					skin.getFont("kenny-8-font").draw(batch, "cd: " + cd, drawX, drawTextY);
+					
 					//@formatter:on
 				}
 
