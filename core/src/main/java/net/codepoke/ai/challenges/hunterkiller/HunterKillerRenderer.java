@@ -22,18 +22,33 @@ import net.codepoke.ai.challenges.hunterkiller.ui.MatchVisualization;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class HunterKillerRenderer
 		extends MatchRenderer<HunterKillerState, HunterKillerAction> {
 
-	// The size at which the tiles will be displayed.
+	/**
+	 * The size at which the tiles will be displayed.
+	 */
 	public static final int TILE_SIZE_DRAW = 36;
-	// The original size of our tile-set images.
+	/**
+	 * The original size of our tile-set images.
+	 */
 	public static final int TILE_SIZE_ORIGINAL = 24;
+	/**
+	 * The default font
+	 */
+	private BitmapFont defaultFont;
+	/**
+	 * A smaller font than the default font
+	 */
+	private BitmapFont smallFont;
 
 	public HunterKillerRenderer(MatchVisualization<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		super(parent, skin);
+		defaultFont = skin.getFont("default-font");
+		smallFont = skin.getFont("kenny-8-font");
 	}
 
 	@Override
@@ -59,8 +74,11 @@ public class HunterKillerRenderer
 
 				// Check if this location should be tinted
 				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
-				// Save the original color, so we can set it back to this later
+				// Save the original colors, so we can set them back later
 				Color originalColor = batch.getColor();
+				Color originalDefaultFontColor = defaultFont.getColor();
+				Color originalSmallFontColor = smallFont.getColor();
+
 				// Change the color if we need to tint this location
 				if (tinted) {
 					batch.setColor(Color.GRAY);
@@ -101,7 +119,14 @@ public class HunterKillerRenderer
 						
 						//Draw the player's resource amount
 						int resource = state.getPlayer(base.getControllingPlayerID()).getResource();
-						skin.getFont("default-font").draw(batch, "" +  resource, drawX, drawTextY);
+						defaultFont.setColor(Color.BLUE);
+						defaultFont.draw(batch, "" +  resource, drawX, drawTextY);
+						
+						//Draw the base's health
+						int health = base.getHpCurrent();
+						defaultFont.setColor(Color.RED);
+						defaultFont.draw(batch, "" +  health, drawX, drawTextYHalf);
+						
 					} else if (object instanceof Door) {
 						// Check for open/closed
 						Door door = (Door)object;
@@ -168,17 +193,19 @@ public class HunterKillerRenderer
 					
 					//Draw the unit's HP and cooldown
 					int hp = unit.getHpCurrent();
-					batch.setColor(Color.RED);
-					skin.getFont("kenny-8-font").draw(batch, "hp: " + hp, drawX, drawTextYHalf);
+					smallFont.setColor(Color.RED);
+					smallFont.draw(batch, "hp: " + hp, drawX, drawTextYHalf);
 					int cd = unit.getSpecialAttackCooldown();
-					batch.setColor(Color.BLUE);
-					skin.getFont("kenny-8-font").draw(batch, "cd: " + cd, drawX, drawTextY);
+					smallFont.setColor(Color.BLUE);
+					smallFont.draw(batch, "cd: " + cd, drawX, drawTextY);
 					
 					//@formatter:on
 				}
 
-				// Restore the original color
+				// Restore the original colors
 				batch.setColor(originalColor);
+				defaultFont.setColor(originalDefaultFontColor);
+				smallFont.setColor(originalSmallFontColor);
 			}
 		}
 	}
