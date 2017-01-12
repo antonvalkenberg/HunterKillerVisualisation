@@ -18,7 +18,7 @@ public class TestBot
 
 	private static Random r = new Random();
 	private static final double noUnitOrderThreshold = 0.2;
-	private static final double noBaseOrderThreshold = 0.5;
+	private static final double noBaseOrderThreshold = 0.3;
 
 	public TestBot() {
 		// TODO Create new BotUID for HunterKiller test bot
@@ -30,15 +30,16 @@ public class TestBot
 		HunterKillerAction random = new HunterKillerAction(state);
 		Player player = state.getPlayer(state.getCurrentPlayer());
 
-		// Check if we want to order the base to do something
-		if (r.nextDouble() >= noBaseOrderThreshold) {
+		// Check if the base exists and we want to order the base to do something
+		if (player.isBaseExists() && r.nextDouble() >= noBaseOrderThreshold) {
 			// Get all legal orders for this base
 			List<BaseOrder> legalOrders = MoveGenerator.getAllLegalOrders(state, (Base) state.getMap()
 																								.getObject(player.getBaseID()));
 
 			// Add a random order
-			if (!legalOrders.isEmpty())
+			if (!legalOrders.isEmpty()) {
 				random.addOrder(legalOrders.get(r.nextInt(legalOrders.size())));
+			}
 		}
 
 		// Move through all Units
