@@ -97,17 +97,23 @@ public class DesktopLauncher {
 
 			public void run() {
 
-				// Small wait for visualization to properly setup
+				// Small wait for visualisation to properly setup
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 
+				GameRules<HunterKillerState, HunterKillerAction> rules = new HunterKillerRules();
 				Array<HunterKillerAction> actions = new Array<HunterKillerAction>();
+
+				// Create the initial state
 				HunterKillerState state = new HunterKillerStateFactory().generateInitialState(new String[] { "A", "B", "C", "D" }, null);
 				HunterKillerState orgState = state.copy();
-				GameRules<HunterKillerState, HunterKillerAction> rules = new HunterKillerRules();
+
+				// Cache some textures for the map
+				vis.renderer.createMapCache(orgState);
+
 				TestBot bot = new TestBot(); // Instantiate your bot here
 
 				Json json = new Json();

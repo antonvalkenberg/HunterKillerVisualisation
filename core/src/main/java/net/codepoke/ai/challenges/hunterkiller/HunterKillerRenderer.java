@@ -11,6 +11,7 @@ import net.codepoke.ai.challenge.hunterkiller.gameobjects.GameObject;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Door;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Floor;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.MapFeature;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Space;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Wall;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Infected;
@@ -23,7 +24,10 @@ import net.codepoke.ai.challenges.hunterkiller.ui.MatchVisualization;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntMap;
 
 public class HunterKillerRenderer
 		extends MatchRenderer<HunterKillerState, HunterKillerAction> {
@@ -44,14 +48,21 @@ public class HunterKillerRenderer
 	 * The offset that we want to use when drawing text on tiles.
 	 */
 	private static final int TEXT_OFFSET_PIXELS = 2;
+
 	/**
 	 * The default font
 	 */
 	private BitmapFont defaultFont;
+
 	/**
 	 * A smaller font than the default font
 	 */
 	private BitmapFont smallFont;
+
+	/**
+	 * Cache containing non-changing textures.
+	 */
+	private IntMap<TextureRegion> mapCache;
 
 	public HunterKillerRenderer(MatchVisualization<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		super(parent, skin);
@@ -96,7 +107,8 @@ public class HunterKillerRenderer
 				}
 
 				// Get the objects on this tile of the map
-				GameObject[] tile = objects[map.toPosition(xCoord, flippedY)];
+				int mapPosition = map.toPosition(xCoord, flippedY);
+				GameObject[] tile = objects[mapPosition];
 
 				// Calculate all our drawing coordinates
 				dh.calculateDrawCoordinates(xCoord, yCoord);
@@ -105,6 +117,7 @@ public class HunterKillerRenderer
 				if (tile[Constants.MAP_INTERNAL_FEATURE_INDEX] != null) {
 					// Draw MapFeatures
 					GameObject object = tile[Constants.MAP_INTERNAL_FEATURE_INDEX];
+
 					//@formatter:off
 					if (object instanceof Base) {
 						//Draw a different color based on team
@@ -132,22 +145,43 @@ public class HunterKillerRenderer
 					} else if (object instanceof Door) {
 						// Check for open/closed
 						Door door = (Door)object;
+						
+						//If the door is open, we want to draw a Floor as background image, so draw it first
+						if (door.isOpen()) {
+							batch.draw(skin.getRegion("map/floor"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+						}
+						
+						//Draw the door
 						batch.draw(skin.getRegion(door.isOpen() ? "map/door_open" : "map/door_closed"),
 						           dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-						//Draw the open-time remaining, if larger than 0
-						if (door.getOpenTimer() > 0) {
+						
+						//If the door is open, we want to draw a timer to show when it closes, this should be on top
+						if (door.isOpen()) {
+							//Draw the open-time remaining
 							int time = door.getOpenTimer();
 							defaultFont.setColor(Color.BLUE);
 							defaultFont.draw(batch, "" +  time, dh.drawXBaseRes, dh.drawYBaseRes);
 						}
+						
 					} else if (object instanceof Floor) {
 						batch.draw(skin.getRegion("map/floor"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+						
 					} else if (object instanceof Space) {
 						batch.draw(skin.getRegion("map/space"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+						
 					} else if (object instanceof Wall) {
-						batch.draw(skin.getRegion("map/wall_single"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+						//Check if this position has been cached
+						int wallPosition = map.toPosition(xCoord, yCoord);
+						if (mapCache.containsKey(mapPosition)) {
+							batch.draw(mapCache.get(mapPosition), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+						}
+						else {
+							//If we haven't cached this Wall, just draw a single
+							batch.draw(skin.getRegion("map/wall_single"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+						}
 					}
 					//@formatter:on
+
 				} else {
 					// This is a problem, there should always be a MapFeature on a tile
 				}
@@ -162,6 +196,7 @@ public class HunterKillerRenderer
 											.getLibgdxRotationAngle();
 
 					//@formatter:off
+					
 					if (unit instanceof Infected) {
 						Infected infected = (Infected)unit;
 						String infectedImg = null;
@@ -173,6 +208,7 @@ public class HunterKillerRenderer
 							default: infectedImg = "units/infected_p4"; break;
 						}
 						batch.draw(skin.getRegion(infectedImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
+						
 					} else if (unit instanceof Medic) {
 						//Draw a different color based on team
 						Medic medic = (Medic)unit;
@@ -185,6 +221,7 @@ public class HunterKillerRenderer
 							default: medicImg = "units/medic_p4"; break;
 						}
 						batch.draw(skin.getRegion(medicImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
+						
 					} else if (unit instanceof Soldier) {
 						//Draw a different color based on team
 						Soldier soldier = (Soldier)unit;
@@ -203,9 +240,13 @@ public class HunterKillerRenderer
 					int hp = unit.getHpCurrent();
 					defaultFont.setColor(Color.RED);
 					defaultFont.draw(batch, "" + hp, dh.drawXUnitHP, dh.drawYUnitHP);
+					
 					int cd = unit.getSpecialAttackCooldown();
-					defaultFont.setColor(Color.BLUE);
-					defaultFont.draw(batch, "" + cd, dh.drawXUnitCD, dh.drawYUnitCD);
+					//Only draw the cooldown if it's on (>0)
+					if (cd > 0) {
+						defaultFont.setColor(Color.BLUE);
+						defaultFont.draw(batch, "" + cd, dh.drawXUnitCD, dh.drawYUnitCD);
+					}
 					
 					//@formatter:on
 				}
@@ -214,6 +255,126 @@ public class HunterKillerRenderer
 				batch.setColor(originalColor);
 				defaultFont.setColor(originalDefaultFontColor);
 				smallFont.setColor(originalSmallFontColor);
+			}
+		}
+	}
+
+	public void createMapCache(HunterKillerState orgState) {
+		// Get the Skin we are working with
+		Skin skin = super.skin;
+		// Create a new cache
+		mapCache = new IntMap<TextureRegion>();
+
+		Map map = orgState.getMap();
+		// Get the map content we are trying to cache
+		GameObject[][] content = map.getMapContent();
+
+		// Traverse the content of the map
+		for (int position = 0; position < content.length; position++) {
+			// We are only caching MapFeatures (and only Walls at that, at the moment)
+			MapFeature feature = (MapFeature) content[position][Constants.MAP_INTERNAL_FEATURE_INDEX];
+			// Check if the feature is a Wall
+			if (feature instanceof Wall) {
+				// Get the features around the wall
+				// We identify these as 9 locations (our wall in the middle), starting top-left and going right->down,
+				// starting from index 0, to 8.
+				MapFeature[] features = map.getMapFeaturesAround(map.toLocation(position));
+
+				// Make a list of indexes that are Walls
+				IntArray wI = new IntArray();
+				for (int i = 0; i < features.length; i++) {
+					// Check for null value
+					if (features[i] != null && features[i] instanceof Wall)
+						wI.add(i);
+				}
+
+				// There are several situations we are looking for, because this piece of Wall looks different in all:
+				// Note: never need to check index 4, this is already our centre Wall.
+
+				// 16: T-section pointing to the right; 1,4,5,7 are Walls, 3 is non-Wall.
+				if (wI.contains(1) && wI.contains(5) && wI.contains(7) && !wI.contains(3)) {
+					mapCache.put(position, skin.getRegion("map/wall_16"));
+					continue;
+				}
+				// 15: T-section pointing to the left; 1,3,4,7 are Walls, 5 is non-Wall.
+				else if (wI.contains(1) && wI.contains(3) && wI.contains(7) && !wI.contains(5)) {
+					mapCache.put(position, skin.getRegion("map/wall_15"));
+					continue;
+				}
+				// 14: T-section pointing to the top; 1,3,4,5 are Walls, 7 is non-Wall.
+				else if (wI.contains(1) && wI.contains(3) && wI.contains(5) && !wI.contains(7)) {
+					mapCache.put(position, skin.getRegion("map/wall_14"));
+					continue;
+				}
+				// 13: T-section pointing to the bottom; 3,4,5,7 are Walls, 1 is non-Wall.
+				else if (wI.contains(3) && wI.contains(5) && wI.contains(7) && !wI.contains(1)) {
+					mapCache.put(position, skin.getRegion("map/wall_13"));
+					continue;
+				}
+				// 12: Top end of a wall section; 4,7 are Walls, 1,3,5 are non-Wall.
+				else if (wI.contains(7) && !wI.contains(1) && !wI.contains(3) && !wI.contains(5)) {
+					// mapCache.put(position, skin.getRegion("map/wall_12"));
+					mapCache.put(position, skin.getRegion("map/wall_09"));
+					continue;
+				}
+				// 11: Left end of a wall section; 4,5 are Walls, 1,3,7 are non-Wall
+				else if (wI.contains(5) && !wI.contains(1) && !wI.contains(3) && !wI.contains(7)) {
+					// mapCache.put(position, skin.getRegion("map/wall_11"));
+					mapCache.put(position, skin.getRegion("map/wall_10"));
+					continue;
+				}
+				// 10: Right end of a wall section; 3,4 are Walls, 1,5,7 are non-Wall
+				else if (wI.contains(3) && !wI.contains(1) && !wI.contains(5) && !wI.contains(7)) {
+					// mapCache.put(position, skin.getRegion("map/wall_10"));
+					mapCache.put(position, skin.getRegion("map/wall_11"));
+					continue;
+				}
+				// 09: Bottom end of a wall section; 1,4 are Walls, 3,5,7 are non-Wall
+				else if (wI.contains(1) && !wI.contains(3) && !wI.contains(5) && !wI.contains(7)) {
+					// mapCache.put(position, skin.getRegion("map/wall_09"));
+					mapCache.put(position, skin.getRegion("map/wall_12"));
+					continue;
+				}
+				// 08: A cross; 1,3,4,5,7 are Walls
+				else if (wI.contains(1) && wI.contains(3) && wI.contains(5) && wI.contains(7)) {
+					mapCache.put(position, skin.getRegion("map/wall_08"));
+					continue;
+				}
+				// 07: Vertically oriented wall; 1,4,7 are Walls, 3,5 are non-Walls
+				else if (wI.contains(1) && wI.contains(7) && !wI.contains(3) && !wI.contains(5)) {
+					mapCache.put(position, skin.getRegion("map/wall_07"));
+					continue;
+				}
+				// 06: Horizontally oriented wall; 3,4,5 are Walls, 1,7 are non-Walls
+				else if (wI.contains(3) && wI.contains(5) && !wI.contains(1) && !wI.contains(7)) {
+					mapCache.put(position, skin.getRegion("map/wall_06"));
+					continue;
+				}
+				// 05: Top-right corner; 3,4,7 are Walls, 1,5 are non-Walls
+				else if (wI.contains(3) && wI.contains(7) && !wI.contains(1) && !wI.contains(5)) {
+					mapCache.put(position, skin.getRegion("map/wall_05"));
+					continue;
+				}
+				// 04: Bottom-left corner; 1,4,5 are Walls, 3,7 are non-Walls
+				else if (wI.contains(1) && wI.contains(5) && !wI.contains(3) && !wI.contains(7)) {
+					mapCache.put(position, skin.getRegion("map/wall_04"));
+					continue;
+				}
+				// 03: Bottom-right corner; 1,3,4 are Walls, 5,7 are non-Walls
+				else if (wI.contains(1) && wI.contains(3) && !wI.contains(5) && !wI.contains(7)) {
+					mapCache.put(position, skin.getRegion("map/wall_03"));
+					continue;
+				}
+				// 02: Top-left corner; 4,5,7 are Walls, 1,3 are non-Walls
+				else if (wI.contains(5) && wI.contains(7) && !wI.contains(1) && !wI.contains(3)) {
+					mapCache.put(position, skin.getRegion("map/wall_02"));
+					continue;
+				}
+				// 01: Pillar (any other situation);
+				else {
+					mapCache.put(position, skin.getRegion("map/wall_01"));
+					continue;
+				}
 			}
 		}
 	}
