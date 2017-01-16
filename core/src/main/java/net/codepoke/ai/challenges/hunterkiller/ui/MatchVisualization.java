@@ -46,6 +46,9 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 
 	/** The states available for rendering. */
 	Array<S> states;
+	
+	/** The actions that led to state X. */
+	Array<A> actions; 
 
 	// The ideal width/height for this Visualization, only valid after setting the initial state.
 	int width = 640, height = 480;
@@ -56,7 +59,7 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 
 			@Override
 			public void onStateCreation(S state, A action) {
-				addState(state);
+				addState(state, action);
 			}
 
 		});
@@ -74,7 +77,8 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 
 		stage = new Stage(new ScreenViewport());
 		states = new Array<S>();
-
+		actions = new Array<A>();
+		
 		Gdx.input.setInputProcessor(stage);
 
 		errorMessage = new Label("No Error", uiSkin);
@@ -122,13 +126,13 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	}
 
 	// Called whenever we want to display a different state
-	private final void stateChange(S newState) {
+	private final void stateChange(S newState, A action) {
 
 		S prevState = board.getState();
 
-		board.setState(newState);
+		board.setState(newState, action);
 		statistics.setStateInfo(getPlayers(newState), getScores(newState));
-		onStateChange(newState);
+		onStateChange(newState, action);
 
 		board.invalidateHierarchy();
 		rootTable.layout();
@@ -160,9 +164,10 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 		if (currentRound < states.size) {
 			errorMessage.setVisible(false);
 			S s = states.get(currentRound);
+			A a = actions.get(currentRound);
 
 			if (board.getState() != s) {
-				stateChange(s);
+				stateChange(s, a);
 			}
 		} else {
 			errorMessage.setText("Downloading Match... ");
@@ -185,15 +190,17 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	}
 
 	/**
-	 * Adds the given state to the Visualization and requesting a new render.
+	 * Adds the given state and action that led to it to the Visualization and requesting a new render.
+	 * The action is null for the initial state.
 	 */
-	public synchronized void addState(S state) {
+	public synchronized void addState(S state, A action) {
 		states.add(state);
+		actions.add(action);
 		controls.setStateRange(states.size - 1);
 		controls.invalidateHierarchy();
 
 		if (states.size == 1) {
-			stateChange(state);
+			stateChange(state, action);
 		}
 
 		Gdx.graphics.requestRendering();
@@ -246,8 +253,10 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	 * 
 	 * @param newState
 	 *            The new state
+	 * @param action 			  
+	 *            The action that led to this state, null if it is the initial state.
 	 */
-	public void onStateChange(S newState) {
+	public void onStateChange(S newState, A action) {
 	}
 
 	/** Called when the MatchVisualization has finished {@link #create()}. */

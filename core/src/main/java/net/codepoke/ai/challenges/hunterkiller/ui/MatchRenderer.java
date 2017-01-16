@@ -12,6 +12,9 @@ public abstract class MatchRenderer<S extends State, A extends Action> extends W
 	/** The current State we are rendering. */
 	protected S state;
 	
+	/** The action that led to this state, potentially null. */
+	protected A action;
+	
 	protected MatchVisualization<S, A> parent;
 	
 	protected Skin skin;
@@ -43,9 +46,14 @@ public abstract class MatchRenderer<S extends State, A extends Action> extends W
 	public S getState() {
 		return state;
 	}
+	
+	public A getAction(){
+		return action;
+	}
 
-	public void setState(S state) {
+	public void setState(S state, A action) {
 		this.state = state;
+		this.action = action;
 		setSize(getPrefWidth(), getPrefHeight());
 		invalidateHierarchy();
 	}

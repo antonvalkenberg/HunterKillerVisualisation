@@ -41,7 +41,7 @@ public class HunterKillerRenderer
 	/**
 	 * The size at which the tiles will be displayed.
 	 */
-	public static final int TILE_SIZE_DRAW = 48;
+	public static final int TILE_SIZE_DRAW = 24;
 	/**
 	 * The scale that libgdx should apply when rotating or transforming.
 	 */
@@ -94,6 +94,9 @@ public class HunterKillerRenderer
 		if (state == null)
 			return;
 
+		// WARNING: Null on initial state!
+		HunterKillerAction action = getAction();
+		
 		float x = getX(), y = getY();
 
 		// Create a new DrawHelper to assist with calculating the coordinates of where to draw things.
