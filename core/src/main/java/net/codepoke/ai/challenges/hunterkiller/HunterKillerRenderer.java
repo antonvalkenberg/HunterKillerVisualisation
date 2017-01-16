@@ -81,10 +81,10 @@ public class HunterKillerRenderer
 		controlledTextures.put(Soldier.class, new String[4]);
 
 		for (int i = 1; i <= 4; i++) {
-			controlledTextures.get(Base.class)[i-1] = "map/base_p" + i;
-			controlledTextures.get(Infected.class)[i-1] = "units/infected_p" + i;
-			controlledTextures.get(Medic.class)[i-1] = "units/medic_p" + i;
-			controlledTextures.get(Soldier.class)[i-1] = "units/soldier_p" + i;
+			controlledTextures.get(Base.class)[i - 1] = "map/base_p" + i;
+			controlledTextures.get(Infected.class)[i - 1] = "units/infected_p" + i;
+			controlledTextures.get(Medic.class)[i - 1] = "units/medic_p" + i;
+			controlledTextures.get(Soldier.class)[i - 1] = "units/soldier_p" + i;
 		}
 	}
 
@@ -96,7 +96,7 @@ public class HunterKillerRenderer
 
 		// WARNING: Null on initial state!
 		HunterKillerAction action = getAction();
-		
+
 		float x = getX(), y = getY();
 
 		// Create a new DrawHelper to assist with calculating the coordinates of where to draw things.
@@ -106,7 +106,7 @@ public class HunterKillerRenderer
 		GameObject[][] objects = map.getMapContent();
 
 		// Get a collection of the current player's combined field-of-view, we need this to make certain tiles shaded
-		HashSet<MapLocation> fovSet = state	.getPlayer(state.getCurrentPlayer())
+		HashSet<MapLocation> fovSet = state.getPlayer(state.getCurrentPlayer())
 											.getCombinedFieldOfView(map);
 
 		// Go through the map
@@ -139,6 +139,11 @@ public class HunterKillerRenderer
 					// Draw MapFeatures
 					GameObject object = tile[Constants.MAP_INTERNAL_FEATURE_INDEX];
 
+					// Check if this position has been cached
+					if (mapCache.containsKey(mapPosition)) {
+						batch.draw(mapCache.get(mapPosition), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+					}
+
 					//@formatter:off
 					if (object instanceof Base) {
 						//Draw a different color based on team
@@ -157,6 +162,11 @@ public class HunterKillerRenderer
 						defaultFont.draw(batch, "" +  health, dh.drawXBaseHP, dh.drawYBaseHP);
 						
 					} else if (object instanceof Door) {
+						// Get the positions around the Door
+						MapFeature[] features = map.getMapFeaturesAround(map.toLocation(mapPosition));
+						//If indexes 1 and 7 have a Wall, we'll need to rotate the Door 90 degrees
+						float rotation = (features[1] instanceof Wall && features[7] instanceof Wall) ? 90 : 0;
+						
 						// Check for open/closed
 						Door door = (Door)object;
 						
@@ -167,7 +177,7 @@ public class HunterKillerRenderer
 						
 						//Draw the door
 						batch.draw(skin.getRegion(door.isOpen() ? "map/door_open" : "map/door_closed"),
-						           dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+						           dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
 						
 						//If the door is open, we want to draw a timer to show when it closes, this should be on top
 						if (door.isOpen()) {
@@ -179,20 +189,10 @@ public class HunterKillerRenderer
 						
 					} else if (object instanceof Floor) {
 						batch.draw(skin.getRegion("map/floor"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-						
 					} else if (object instanceof Space) {
 						batch.draw(skin.getRegion("map/space"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-						
 					} else if (object instanceof Wall) {
-						//Check if this position has been cached
-						int wallPosition = map.toPosition(xCoord, yCoord);
-						if (mapCache.containsKey(mapPosition)) {
-							batch.draw(mapCache.get(mapPosition), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-						}
-						else {
-							//If we haven't cached this Wall, just draw a single
-							batch.draw(skin.getRegion("map/wall_single"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-						}
+						batch.draw(skin.getRegion("map/wall_single"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
 					}
 					//@formatter:on
 
@@ -206,7 +206,7 @@ public class HunterKillerRenderer
 					// Get the rotation we need to give while drawing, note that a rotation of 0 is the same as the
 					// sprite stands in the file (which is facing left, or WEST).
 					// These angles are defined in Direction through .getLibgdxRotationAngle()
-					float rotation = unit	.getOrientation()
+					float rotation = unit.getOrientation()
 											.getLibgdxRotationAngle();
 
 					//@formatter:off
@@ -245,6 +245,13 @@ public class HunterKillerRenderer
 		return controlledTextures.get(target.getClass())[target.getControllingPlayerID()];
 	}
 
+	/**
+	 * Create a cache of {@link TextureRegion}s, indexed by their position on the {@link Map}. This method currently
+	 * caches the following MapFeature-objects: Wall, Floor, Space.
+	 * 
+	 * @param orgState
+	 *            The initial state of the game.
+	 */
 	public void createMapCache(HunterKillerState orgState) {
 		// Get the Skin we are working with
 		Skin skin = super.skin;
@@ -257,7 +264,7 @@ public class HunterKillerRenderer
 
 		// Traverse the content of the map
 		for (int position = 0; position < content.length; position++) {
-			// We are only caching MapFeatures (and only Walls at that, at the moment)
+			// We are only caching MapFeatures, because they change to infrequently
 			MapFeature feature = (MapFeature) content[position][Constants.MAP_INTERNAL_FEATURE_INDEX];
 			// Check if the feature is a Wall
 			if (feature instanceof Wall) {
@@ -269,7 +276,7 @@ public class HunterKillerRenderer
 				// Make a list of indexes that are Walls
 				IntArray wI = new IntArray();
 				for (int i = 0; i < features.length; i++) {
-					// Check for null value
+					// Check for null value, also: treat Doors as Walls here, since that makes the cleanest look
 					if (features[i] != null && (features[i] instanceof Wall || features[i] instanceof Door))
 						wI.add(i);
 				}
@@ -361,19 +368,23 @@ public class HunterKillerRenderer
 					mapCache.put(position, skin.getRegion("map/wall_01"));
 					continue;
 				}
+			} else if (feature instanceof Floor) {
+				mapCache.put(position, skin.getRegion("map/floor"));
+			} else if (feature instanceof Space) {
+				mapCache.put(position, skin.getRegion("map/space"));
 			}
 		}
 	}
 
 	@Override
 	public float getPrefWidth() {
-		return (state != null ? state	.getMap()
+		return (state != null ? state.getMap()
 										.getMapWidth() * TILE_SIZE_DRAW : 0);
 	}
 
 	@Override
 	public float getPrefHeight() {
-		return (state != null ? state	.getMap()
+		return (state != null ? state.getMap()
 										.getMapHeight() * TILE_SIZE_DRAW : 0);
 	}
 
@@ -389,19 +400,19 @@ public class HunterKillerRenderer
 
 		/** The X/Y-coordinate of where libgdx starts drawing the map. */
 		private float x = 0, y = 0;
-		
+
 		/** The size of the tiles as drawn on the screen. */
 		private float drawnTileSize = TILE_SIZE_DRAW;
-		
-		/** The scale libgdx should apply when rotating or transforming. */		
+
+		/** The scale libgdx should apply when rotating or transforming. */
 		private float scale = SCALE;
-		
+
 		/** The amount of pixels of room we want to use between the start of a tile and the start of any text. */
 		private int textOffset = TEXT_OFFSET_PIXELS;
-		
+
 		/** The X-coordinate of where libgdx will start drawing the texture. */
 		public float drawX;
-		
+
 		/** The Y-coordinate of where libgdx will start drawing the texture. */
 		public float drawY;
 		/**
