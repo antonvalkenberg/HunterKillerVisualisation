@@ -7,6 +7,7 @@ import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.MapLocation;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.Controlled;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.GameObject;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Door;
@@ -28,6 +29,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class HunterKillerRenderer
 		extends MatchRenderer<HunterKillerState, HunterKillerAction> {
@@ -64,10 +66,26 @@ public class HunterKillerRenderer
 	 */
 	private IntMap<TextureRegion> mapCache;
 
+	/** Cache of Type to a list texture names (indexed on player ID) for Controlled */
+	private ObjectMap<Class, String[]> controlledTextures;
+
 	public HunterKillerRenderer(MatchVisualization<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		super(parent, skin);
 		defaultFont = skin.getFont("default-font");
 		smallFont = skin.getFont("kenny-8-font");
+		controlledTextures = new ObjectMap<Class, String[]>();
+
+		controlledTextures.put(Base.class, new String[4]);
+		controlledTextures.put(Infected.class, new String[4]);
+		controlledTextures.put(Medic.class, new String[4]);
+		controlledTextures.put(Soldier.class, new String[4]);
+
+		for (int i = 1; i <= 4; i++) {
+			controlledTextures.get(Base.class)[i-1] = "map/base_p" + i;
+			controlledTextures.get(Infected.class)[i-1] = "units/infected_p" + i;
+			controlledTextures.get(Medic.class)[i-1] = "units/medic_p" + i;
+			controlledTextures.get(Soldier.class)[i-1] = "units/soldier_p" + i;
+		}
 	}
 
 	@Override
@@ -122,14 +140,7 @@ public class HunterKillerRenderer
 					if (object instanceof Base) {
 						//Draw a different color based on team
 						Base base = (Base)object;
-						String baseImg = null;
-						switch(base.getControllingPlayerID()) {
-							case 0: baseImg = "map/base_p1"; break;
-							case 1: baseImg = "map/base_p2"; break;
-							case 2: baseImg = "map/base_p3"; break;
-							case 3:
-							default: baseImg = "map/base_p4"; break;
-						}
+						String baseImg = getTextureLocation(base);						
 						batch.draw(skin.getRegion(baseImg), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
 						
 						//Draw the player's resource amount
@@ -192,49 +203,13 @@ public class HunterKillerRenderer
 					// Get the rotation we need to give while drawing, note that a rotation of 0 is the same as the
 					// sprite stands in the file (which is facing left, or WEST).
 					// These angles are defined in Direction through .getLibgdxRotationAngle()
-					float rotation = unit.getOrientation()
+					float rotation = unit	.getOrientation()
 											.getLibgdxRotationAngle();
 
 					//@formatter:off
-					
-					if (unit instanceof Infected) {
-						Infected infected = (Infected)unit;
-						String infectedImg = null;
-						switch(infected.getControllingPlayerID()) {
-							case 0: infectedImg = "units/infected_p1"; break;
-							case 1: infectedImg = "units/infected_p2"; break;
-							case 2: infectedImg = "units/infected_p3"; break;
-							case 3:
-							default: infectedImg = "units/infected_p4"; break;
-						}
-						batch.draw(skin.getRegion(infectedImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
-						
-					} else if (unit instanceof Medic) {
-						//Draw a different color based on team
-						Medic medic = (Medic)unit;
-						String medicImg = null;
-						switch(medic.getControllingPlayerID()) {
-							case 0: medicImg = "units/medic_p1"; break;
-							case 1: medicImg = "units/medic_p2"; break;
-							case 2: medicImg = "units/medic_p3"; break;
-							case 3:
-							default: medicImg = "units/medic_p4"; break;
-						}
-						batch.draw(skin.getRegion(medicImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
-						
-					} else if (unit instanceof Soldier) {
-						//Draw a different color based on team
-						Soldier soldier = (Soldier)unit;
-						String soldierImg = null;
-						switch(soldier.getControllingPlayerID()) {
-							case 0: soldierImg = "units/soldier_p1"; break;
-							case 1: soldierImg = "units/soldier_p2"; break;
-							case 2: soldierImg = "units/soldier_p3"; break;
-							case 3:
-							default: soldierImg = "units/soldier_p4"; break;
-						}
-						batch.draw(skin.getRegion(soldierImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
-					}
+
+					String unitImg = getTextureLocation(unit);
+					batch.draw(skin.getRegion(unitImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
 					
 					//Draw the unit's HP and cooldown
 					int hp = unit.getHpCurrent();
@@ -257,6 +232,14 @@ public class HunterKillerRenderer
 				smallFont.setColor(originalSmallFontColor);
 			}
 		}
+	}
+
+	/**
+	 * Returns the location and name of a texture for a given Controlled instance. (Based on class and controlling
+	 * player)
+	 */
+	private String getTextureLocation(Controlled target) {
+		return controlledTextures.get(target.getClass())[target.getControllingPlayerID()];
 	}
 
 	public void createMapCache(HunterKillerState orgState) {
