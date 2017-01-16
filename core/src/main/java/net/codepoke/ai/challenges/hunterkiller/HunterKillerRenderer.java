@@ -145,7 +145,7 @@ public class HunterKillerRenderer
 					}
 
 					//@formatter:off
-					if (object instanceof Base) {
+					else if (object instanceof Base) {
 						//Draw a different color based on team
 						Base base = (Base)object;
 						String baseImg = getTextureLocation(base);						
@@ -264,7 +264,7 @@ public class HunterKillerRenderer
 
 		// Traverse the content of the map
 		for (int position = 0; position < content.length; position++) {
-			// We are only caching MapFeatures, because they change to infrequently
+			// We are only caching MapFeatures, because they change so infrequently
 			MapFeature feature = (MapFeature) content[position][Constants.MAP_INTERNAL_FEATURE_INDEX];
 			// Check if the feature is a Wall
 			if (feature instanceof Wall) {
