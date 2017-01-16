@@ -1,6 +1,7 @@
 package net.codepoke.ai.challenges.hunterkiller.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -221,6 +222,14 @@ public class MatchControls
 	@Override
 	public void act(float delta) {
 		currentDt += delta;
+
+		if (Gdx.input.isKeyJustPressed(Keys.LEFT)) {
+			timeline.setValue(timeline.getValue() - playbackSpeed);
+			Gdx.graphics.requestRendering();
+		} else if (Gdx.input.isKeyJustPressed(Keys.RIGHT)) {
+			timeline.setValue(timeline.getValue() + playbackSpeed);
+			Gdx.graphics.requestRendering();
+		}
 
 		if (currentDt > 0.125f) {
 			currentDt = 0;
