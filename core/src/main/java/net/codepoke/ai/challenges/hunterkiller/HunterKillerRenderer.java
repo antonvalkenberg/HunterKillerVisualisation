@@ -7,6 +7,7 @@ import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.MapLocation;
+import net.codepoke.ai.challenge.hunterkiller.enums.Direction;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.Controlled;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.GameObject;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
@@ -41,7 +42,7 @@ public class HunterKillerRenderer
 	/**
 	 * The size at which the tiles will be displayed.
 	 */
-	public static final int TILE_SIZE_DRAW = 24;
+	public static final int TILE_SIZE_DRAW = 48;
 	/**
 	 * The scale that libgdx should apply when rotating or transforming.
 	 */
@@ -205,14 +206,20 @@ public class HunterKillerRenderer
 
 					// Get the rotation we need to give while drawing, note that a rotation of 0 is the same as the
 					// sprite stands in the file (which is facing left, or WEST).
-					// These angles are defined in Direction through .getLibgdxRotationAngle()
-					float rotation = unit.getOrientation()
-											.getLibgdxRotationAngle();
+					float rotation = getUnitRotationAngle(unit.getOrientation());
+					float unitScaleX = dh.scaleX;
+					float unitScaleY = dh.scaleY;
+					// However, if the rotation is 180, don't rotate, but flip the texture over the X-axis.
+					if (rotation == 180) {
+						// We don't rotate here, because we want to sprite to have it's feet on the bottom edge.
+						rotation = 0;
+						unitScaleX = -unitScaleX;
+					}
 
 					//@formatter:off
 
 					String unitImg = getTextureLocation(unit);
-					batch.draw(skin.getRegion(unitImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
+					batch.draw(skin.getRegion(unitImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, unitScaleX, unitScaleY, rotation);
 					
 					//Draw the unit's HP and cooldown
 					int hp = unit.getHpCurrent();
@@ -243,6 +250,30 @@ public class HunterKillerRenderer
 	 */
 	private String getTextureLocation(Controlled target) {
 		return controlledTextures.get(target.getClass())[target.getControllingPlayerID()];
+	}
+
+	/**
+	 * Returns the rotation needed to correctly render a Unit that is facing this direction. Because the sprites in the
+	 * texture files we are using are facing left (or WEST), that direction is considered to have a rotational angle of
+	 * 0 degrees. This angle increases counter-clockwise, as defined by
+	 * {@link Batch#draw(TextureRegion, float, float, float, float, float, float, float, float, float)}.
+	 */
+	public float getUnitRotationAngle(Direction direction) {
+		switch (direction) {
+		case WEST:
+			// This is defined as being 0 degrees, since the texture files (the sprites we use for representing
+			// Units) are facing left/WEST.
+			return 0;
+		case SOUTH:
+			// The rotation that is used measures counter-clockwise, which means bottom/SOUTH is at 90 degrees.
+			return 90;
+		case EAST:
+			return 180;
+		case NORTH:
+			return 270;
+		default:
+			throw new RuntimeException("Unsupported Direction value " + direction);
+		}
 	}
 
 	/**
