@@ -103,7 +103,7 @@ public class HunterKillerRenderer
 		GameObject[][] objects = map.getMapContent();
 
 		// Get a collection of the current player's combined field-of-view, we need this to make certain tiles shaded
-		HashSet<MapLocation> fovSet = state.getPlayer(state.getCurrentPlayer())
+		HashSet<MapLocation> fovSet = state	.getPlayer(state.getCurrentPlayer())
 											.getCombinedFieldOfView(map);
 
 		// Go through the map
@@ -364,13 +364,13 @@ public class HunterKillerRenderer
 
 	@Override
 	public float getPrefWidth() {
-		return (state != null ? state.getMap()
+		return (state != null ? state	.getMap()
 										.getMapWidth() * TILE_SIZE_DRAW : 0);
 	}
 
 	@Override
 	public float getPrefHeight() {
-		return (state != null ? state.getMap()
+		return (state != null ? state	.getMap()
 										.getMapHeight() * TILE_SIZE_DRAW : 0);
 	}
 
@@ -384,33 +384,22 @@ public class HunterKillerRenderer
 
 		// region Properties
 
-		/**
-		 * The X-coordinate of where libgdx starts drawing the map.
-		 */
-		private float x = 0;
-		/**
-		 * The X-coordinate of where libgdx starts drawing the map.
-		 */
-		private float y = 0;
-		/**
-		 * The size of the tiles as drawn on the screen.
-		 */
+		/** The X/Y-coordinate of where libgdx starts drawing the map. */
+		private float x = 0, y = 0;
+		
+		/** The size of the tiles as drawn on the screen. */
 		private float drawnTileSize = TILE_SIZE_DRAW;
-		/**
-		 * The scale libgdx should apply when rotating or transforming.
-		 */
+		
+		/** The scale libgdx should apply when rotating or transforming. */		
 		private float scale = SCALE;
-		/**
-		 * The amount of pixels of room we want to use between the start of a tile and the start of any text.
-		 */
+		
+		/** The amount of pixels of room we want to use between the start of a tile and the start of any text. */
 		private int textOffset = TEXT_OFFSET_PIXELS;
-		/**
-		 * The X-coordinate of where libgdx will start drawing the texture.
-		 */
+		
+		/** The X-coordinate of where libgdx will start drawing the texture. */
 		public float drawX;
-		/**
-		 * The Y-coordinate of where libgdx will start drawing the texture.
-		 */
+		
+		/** The Y-coordinate of where libgdx will start drawing the texture. */
 		public float drawY;
 		/**
 		 * The X-coordinate of the point around which libgdx should rotate the texture.
