@@ -267,7 +267,7 @@ public class HunterKillerRenderer
 				IntArray wI = new IntArray();
 				for (int i = 0; i < features.length; i++) {
 					// Check for null value
-					if (features[i] != null && features[i] instanceof Wall)
+					if (features[i] != null && (features[i] instanceof Wall || features[i] instanceof Door))
 						wI.add(i);
 				}
 
