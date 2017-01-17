@@ -48,12 +48,26 @@ public class TestBot
 			if (r.nextDouble() <= noUnitOrderThreshold)
 				continue;
 
-			// Get all legal orders for this unit
-			List<UnitOrder> legalOrders = MoveGenerator.getAllLegalOrders(state, unit);
+			// Get all legal rotation orders for this unit
+			List<UnitOrder> legalRotationOrders = MoveGenerator.getAllLegalOrders(state, unit, true, false, false);
+			// Get all legal move orders for this unit
+			List<UnitOrder> legalMoveOrders = MoveGenerator.getAllLegalOrders(state, unit, false, true, false);
+			// Get all legal attack orders for this unit
+			List<UnitOrder> legalAttackOrders = MoveGenerator.getAllLegalOrders(state, unit, false, false, true);
 
-			// Add a random order
-			if (!legalOrders.isEmpty())
-				random.addOrder(legalOrders.get(r.nextInt(legalOrders.size())));
+			double attackType = r.nextDouble();
+			// Do a random rotation with 20% chance
+			if (attackType <= 0.2 && !legalRotationOrders.isEmpty()) {
+				random.addOrder(legalRotationOrders.get(r.nextInt(legalRotationOrders.size())));
+			}
+			// Do a random move with 50% chance
+			else if (attackType <= 0.7 && !legalMoveOrders.isEmpty()) {
+				random.addOrder(legalMoveOrders.get(r.nextInt(legalMoveOrders.size())));
+			}
+			// Do a random attack with 30% chance
+			else if (!legalAttackOrders.isEmpty()) {
+				random.addOrder(legalAttackOrders.get(r.nextInt(legalAttackOrders.size())));
+			}
 		}
 
 		// Return the randomly created action

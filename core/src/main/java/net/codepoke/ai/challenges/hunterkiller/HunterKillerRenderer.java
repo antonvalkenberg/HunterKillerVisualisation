@@ -1,6 +1,7 @@
 package net.codepoke.ai.challenges.hunterkiller;
 
 import java.util.HashSet;
+import java.util.List;
 
 import net.codepoke.ai.challenge.hunterkiller.Constants;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
@@ -8,6 +9,7 @@ import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.MapLocation;
 import net.codepoke.ai.challenge.hunterkiller.enums.Direction;
+import net.codepoke.ai.challenge.hunterkiller.enums.UnitOrderType;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.Controlled;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.GameObject;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
@@ -20,6 +22,8 @@ import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Infected;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Medic;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Soldier;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Unit;
+import net.codepoke.ai.challenge.hunterkiller.orders.HunterKillerOrder;
+import net.codepoke.ai.challenge.hunterkiller.orders.UnitOrder;
 import net.codepoke.ai.challenges.hunterkiller.ui.MatchRenderer;
 import net.codepoke.ai.challenges.hunterkiller.ui.MatchVisualization;
 
@@ -241,6 +245,76 @@ public class HunterKillerRenderer
 				defaultFont.setColor(originalDefaultFontColor);
 				smallFont.setColor(originalSmallFontColor);
 			}
+		}
+
+		// Check if we need to draw any actions
+		if (action != null) {
+
+			// Adjust the color of the batch, to draw with a lighter alpha
+			Color originalColor = batch.getColor();
+			batch.setColor(originalColor.r, originalColor.g, originalColor.b, 0.8f);
+
+			for (HunterKillerOrder order : action.getOrders()) {
+				// Only draw orders that were accepted
+				if (!order.isAccepted())
+					continue;
+
+				if (order instanceof UnitOrder) {
+					UnitOrder unitOrder = (UnitOrder) order;
+					UnitOrderType type = unitOrder.getOrderType();
+					MapLocation target = unitOrder.getTargetLocation();
+
+					// We will need the order to have a target set, otherwise we can't draw anywhere
+					if (target != null && map.isOnMap(target)) {
+
+						// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
+						int flippedY = (map.getMapHeight() - 1) - target.getY();
+						// Calculate all our drawing coordinates
+						dh.calculateDrawCoordinates(target.getX(), flippedY);
+
+						// Only draw attack orders
+						if (type == UnitOrderType.ATTACK) {
+							// Check what type of unit the order was for
+							switch (unitOrder.getUnitType()) {
+							case Infected:
+								batch.draw(skin.getRegion("fx/melee"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+								break;
+							case Medic:
+								// Fall through here, because we draw the Soldier's and Medic's basic attack the same
+							case Soldier:
+								batch.draw(skin.getRegion("fx/attack"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+								break;
+							default:
+								throw new RuntimeException("Unsupported UnitType found: " + unitOrder.getUnitType());
+							}
+						} else if (type == UnitOrderType.ATTACK_SPECIAL) {
+							// Check what type of unit the order was for
+							switch (unitOrder.getUnitType()) {
+							case Infected:
+								// Ignore, this special can't be ordered
+								break;
+							case Medic:
+								batch.draw(skin.getRegion("fx/heal"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+								break;
+							case Soldier:
+								// Get the area of the Soldier's effect
+								List<MapLocation> soldierAOE = map.getAreaAround(target, true);
+								for (MapLocation loc : soldierAOE) {
+									// Make a temporary draw-helper
+									dh.calculateDrawCoordinates(loc.getX(), (map.getMapHeight() - 1) - loc.getY());
+									batch.draw(skin.getRegion("fx/aoe"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+								}
+								break;
+							default:
+								throw new RuntimeException("Unsupported UnitType found: " + unitOrder.getUnitType());
+							}
+						}
+					}
+				}
+			}
+
+			// Reset the correct color
+			batch.setColor(originalColor);
 		}
 	}
 

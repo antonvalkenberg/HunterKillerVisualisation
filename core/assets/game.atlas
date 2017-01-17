@@ -1,5 +1,39 @@
 
 game.png
+size: 256,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+fx/aoe
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+fx/attack
+  rotate: false
+  xy: 36, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+fx/heal
+  rotate: false
+  xy: 70, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+fx/melee
+  rotate: false
+  xy: 104, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+
+game2.png
 size: 1024,32
 format: RGBA8888
 filter: Nearest,Nearest
@@ -180,7 +214,7 @@ map/wall_16
   offset: 0, 0
   index: -1
 
-game2.png
+game3.png
 size: 256,128
 format: RGBA8888
 filter: Nearest,Nearest
@@ -354,7 +388,7 @@ ui/panel_btn_white
   offset: 0, 0
   index: -1
 
-game3.png
+game4.png
 size: 256,32
 format: RGBA8888
 filter: Nearest,Nearest
@@ -465,7 +499,7 @@ ui/bars/bar_right_4
   offset: 0, 0
   index: -1
 
-game4.png
+game5.png
 size: 64,32
 format: RGBA8888
 filter: Nearest,Nearest
@@ -485,7 +519,7 @@ ui/btns/btn_up
   offset: 0, 0
   index: -1
 
-game5.png
+game6.png
 size: 512,32
 format: RGBA8888
 filter: Nearest,Nearest
@@ -617,7 +651,7 @@ ui/controls/start_over
   offset: 0, 0
   index: -1
 
-game6.png
+game7.png
 size: 512,32
 format: RGBA8888
 filter: Nearest,Nearest
