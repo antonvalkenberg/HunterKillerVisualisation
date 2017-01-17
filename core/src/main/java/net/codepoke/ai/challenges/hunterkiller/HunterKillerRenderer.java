@@ -27,6 +27,8 @@ import net.codepoke.ai.challenge.hunterkiller.orders.UnitOrder;
 import net.codepoke.ai.challenges.hunterkiller.ui.MatchRenderer;
 import net.codepoke.ai.challenges.hunterkiller.ui.MatchVisualization;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -237,6 +239,13 @@ public class HunterKillerRenderer
 						defaultFont.draw(batch, "" + cd, dh.drawXUnitCD, dh.drawYUnitCD);
 					}
 					
+					//Draw a Unit's ID if CTRL is pressed
+					if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT)) {
+						int unitID = unit.getID();
+						defaultFont.setColor(Color.GREEN);
+						defaultFont.draw(batch, "" + unitID, dh.drawXBaseHP, dh.drawYBaseHP);
+					}
+					
 					//@formatter:on
 				}
 
@@ -300,6 +309,9 @@ public class HunterKillerRenderer
 								// Get the area of the Soldier's effect
 								List<MapLocation> soldierAOE = map.getAreaAround(target, true);
 								for (MapLocation loc : soldierAOE) {
+									// Don't draw AOE on Walls
+									if (map.getFeatureAtLocation(loc) instanceof Wall)
+										continue;
 									// Make a temporary draw-helper
 									dh.calculateDrawCoordinates(loc.getX(), (map.getMapHeight() - 1) - loc.getY());
 									batch.draw(skin.getRegion("fx/aoe"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
