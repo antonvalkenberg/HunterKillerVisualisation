@@ -52,7 +52,7 @@ public class HunterKillerRenderer
 	/**
 	 * The size at which the tiles will be displayed.
 	 */
-	public static final int TILE_SIZE_DRAW = 48;
+	public static final int TILE_SIZE_DRAW = 24;
 	/**
 	 * The scale that libgdx should apply when rotating or transforming.
 	 */
@@ -183,7 +183,7 @@ public class HunterKillerRenderer
 						
 						//If the door is open, we want to draw a Floor as background image, so draw it first
 						if (door.isOpen()) {
-							batch.draw(skin.getRegion("map/floor"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+							batch.draw(skin.getRegion("map/floor_1"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
 						}
 						
 						//Draw the door
