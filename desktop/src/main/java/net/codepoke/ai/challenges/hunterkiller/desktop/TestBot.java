@@ -8,6 +8,8 @@ import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.MoveGenerator;
 import net.codepoke.ai.challenge.hunterkiller.Player;
+import net.codepoke.ai.challenge.hunterkiller.enums.UnitOrderType;
+import net.codepoke.ai.challenge.hunterkiller.enums.UnitType;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Unit;
 import net.codepoke.ai.challenge.hunterkiller.orders.BaseOrder;
@@ -44,7 +46,7 @@ public class TestBot
 		}
 
 		Map map = state.getMap();
-		
+
 		// Move through all Units
 		for (Unit unit : player.getUnits(state.getMap())) {
 			// Check if we want to do nothing
@@ -57,11 +59,12 @@ public class TestBot
 			List<UnitOrder> legalMoveOrders = MoveGenerator.getAllLegalOrders(state, unit, false, true, false);
 			// Get all legal attack orders for this unit
 			List<UnitOrder> legalAttackOrders = MoveGenerator.getAllLegalOrders(state, unit, false, false, true);
-			
-			// Remove all attacks without a proper target or ally target
+
+			// Remove all attacks without a proper target or ally target, unless it's a Medic's special attack
 			legalAttackOrders.removeIf((order) -> {
-				Unit target = map.getUnitAtLocation(order.getTargetLocation());				
-				return target == null || map.getUnitAtLocation(order.getTargetLocation()).getControllingPlayerID() == unit.getControllingPlayerID();
+				Unit target = map.getUnitAtLocation(order.getTargetLocation());
+				return target == null
+						|| (target.getControllingPlayerID() == unit.getControllingPlayerID() && !(order.getUnitType() == UnitType.Medic && order.getOrderType() == UnitOrderType.ATTACK_SPECIAL));
 			});
 
 			double attackType = r.nextDouble();
