@@ -1,7 +1,11 @@
 package net.codepoke.ai.challenges.hunterkiller;
 
+import static java.lang.Double.min;
+import static java.lang.Math.abs;
+
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 import net.codepoke.ai.challenge.hunterkiller.Constants;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
@@ -195,7 +199,7 @@ public class HunterKillerRenderer
 						}
 						
 					} else if (object instanceof Floor) {
-						batch.draw(skin.getRegion("map/floor"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+						batch.draw(skin.getRegion("map/floor_1"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
 					} else if (object instanceof Space) {
 						batch.draw(skin.getRegion("map/space"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
 					} else if (object instanceof Wall) {
@@ -378,9 +382,15 @@ public class HunterKillerRenderer
 		Map map = orgState.getMap();
 		// Get the map content we are trying to cache
 		GameObject[][] content = map.getMapContent();
+		
+		Random r = new Random(4);
 
 		// Traverse the content of the map
 		for (int position = 0; position < content.length; position++) {
+
+			// Create a weight
+			double weight = abs(min(r.nextGaussian(), 2));
+			
 			// We are only caching MapFeatures, because they change so infrequently
 			MapFeature feature = (MapFeature) content[position][Constants.MAP_INTERNAL_FEATURE_INDEX];
 			// Check if the feature is a Wall
@@ -452,12 +462,14 @@ public class HunterKillerRenderer
 				}
 				// 07: Vertically oriented wall; 1,4,7 are Walls, 3,5 are non-Walls
 				else if (wI.contains(1) && wI.contains(7) && !wI.contains(3) && !wI.contains(5)) {
-					mapCache.put(position, skin.getRegion("map/wall_07"));
+					// Grab one of the alternative tiles with some distribution
+					mapCache.put(position, skin.getRegion(weight < 1.2 ? "map/wall_07" : "map/wall_07b"));
+					
 					continue;
 				}
 				// 06: Horizontally oriented wall; 3,4,5 are Walls, 1,7 are non-Walls
 				else if (wI.contains(3) && wI.contains(5) && !wI.contains(1) && !wI.contains(7)) {
-					mapCache.put(position, skin.getRegion("map/wall_06"));
+					mapCache.put(position, skin.getRegion(weight < 1.2 ? "map/wall_06" : "map/wall_06b"));
 					continue;
 				}
 				// 05: Top-right corner; 3,4,7 are Walls, 1,5 are non-Walls
@@ -486,7 +498,16 @@ public class HunterKillerRenderer
 					continue;
 				}
 			} else if (feature instanceof Floor) {
-				mapCache.put(position, skin.getRegion("map/floor"));
+				// Grab one of the alternative tiles with some distribution				
+				if(weight < 1.2){
+					mapCache.put(position, skin.getRegion("map/floor_1"));
+				} else if(weight < 1.4){
+					mapCache.put(position, skin.getRegion("map/floor_2"));
+				}else if(weight < 1.8){
+					mapCache.put(position, skin.getRegion("map/floor_3"));
+				}else {
+					mapCache.put(position, skin.getRegion("map/floor_4"));
+				}
 			} else if (feature instanceof Space) {
 				mapCache.put(position, skin.getRegion("map/space"));
 			}
