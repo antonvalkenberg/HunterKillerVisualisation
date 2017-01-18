@@ -105,6 +105,11 @@ public class HunterKillerRenderer
 		if (state == null)
 			return;
 
+		// Initialize the cache
+		if (mapCache == null) {
+			createMapCache(state);
+		}
+
 		// WARNING: Null on initial state!
 		HunterKillerAction action = getAction();
 
@@ -374,15 +379,13 @@ public class HunterKillerRenderer
 	 *            The initial state of the game.
 	 */
 	public void createMapCache(HunterKillerState orgState) {
-		// Get the Skin we are working with
-		Skin skin = super.skin;
 		// Create a new cache
 		mapCache = new IntMap<TextureRegion>();
 
 		Map map = orgState.getMap();
 		// Get the map content we are trying to cache
 		GameObject[][] content = map.getMapContent();
-		
+
 		Random r = new Random(4);
 
 		// Traverse the content of the map
@@ -390,7 +393,7 @@ public class HunterKillerRenderer
 
 			// Create a weight
 			double weight = abs(min(r.nextGaussian(), 2));
-			
+
 			// We are only caching MapFeatures, because they change so infrequently
 			MapFeature feature = (MapFeature) content[position][Constants.MAP_INTERNAL_FEATURE_INDEX];
 			// Check if the feature is a Wall
@@ -464,7 +467,7 @@ public class HunterKillerRenderer
 				else if (wI.contains(1) && wI.contains(7) && !wI.contains(3) && !wI.contains(5)) {
 					// Grab one of the alternative tiles with some distribution
 					mapCache.put(position, skin.getRegion(weight < 1.2 ? "map/wall_07" : "map/wall_07b"));
-					
+
 					continue;
 				}
 				// 06: Horizontally oriented wall; 3,4,5 are Walls, 1,7 are non-Walls
@@ -498,14 +501,14 @@ public class HunterKillerRenderer
 					continue;
 				}
 			} else if (feature instanceof Floor) {
-				// Grab one of the alternative tiles with some distribution				
-				if(weight < 1.2){
+				// Grab one of the alternative tiles with some distribution
+				if (weight < 1.2) {
 					mapCache.put(position, skin.getRegion("map/floor_1"));
-				} else if(weight < 1.4){
+				} else if (weight < 1.4) {
 					mapCache.put(position, skin.getRegion("map/floor_2"));
-				}else if(weight < 1.8){
+				} else if (weight < 1.8) {
 					mapCache.put(position, skin.getRegion("map/floor_3"));
-				}else {
+				} else {
 					mapCache.put(position, skin.getRegion("map/floor_4"));
 				}
 			} else if (feature instanceof Space) {

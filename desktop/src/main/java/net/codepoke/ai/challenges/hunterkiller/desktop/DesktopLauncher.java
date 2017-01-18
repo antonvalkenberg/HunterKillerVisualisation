@@ -109,10 +109,8 @@ public class DesktopLauncher {
 
 				// Create the initial state
 				HunterKillerState state = new HunterKillerStateFactory().generateInitialState(new String[] { "A", "B", "C", "D" }, null);
-				HunterKillerState orgState = state.copy();
 
-				// Cache some textures for the map
-				vis.renderer.createMapCache(orgState);
+				HunterKillerState orgState = state.copy();
 
 				TestBot bot = new TestBot(); // Instantiate your bot here
 
