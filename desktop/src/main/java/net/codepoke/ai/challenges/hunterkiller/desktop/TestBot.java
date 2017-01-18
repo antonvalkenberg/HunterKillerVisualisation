@@ -5,6 +5,7 @@ import java.util.Random;
 
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
+import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.MoveGenerator;
 import net.codepoke.ai.challenge.hunterkiller.Player;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
@@ -42,6 +43,8 @@ public class TestBot
 			}
 		}
 
+		Map map = state.getMap();
+		
 		// Move through all Units
 		for (Unit unit : player.getUnits(state.getMap())) {
 			// Check if we want to do nothing
@@ -54,6 +57,12 @@ public class TestBot
 			List<UnitOrder> legalMoveOrders = MoveGenerator.getAllLegalOrders(state, unit, false, true, false);
 			// Get all legal attack orders for this unit
 			List<UnitOrder> legalAttackOrders = MoveGenerator.getAllLegalOrders(state, unit, false, false, true);
+			
+			// Remove all attacks without a proper target or ally target
+			legalAttackOrders.removeIf((order) -> {
+				Unit target = map.getUnitAtLocation(order.getTargetLocation());				
+				return target == null || map.getUnitAtLocation(order.getTargetLocation()).getControllingPlayerID() == unit.getControllingPlayerID();
+			});
 
 			double attackType = r.nextDouble();
 			// Do a random rotation with 20% chance
