@@ -11,6 +11,7 @@ import net.codepoke.ai.challenge.hunterkiller.Player;
 import net.codepoke.ai.challenge.hunterkiller.enums.UnitOrderType;
 import net.codepoke.ai.challenge.hunterkiller.enums.UnitType;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.MapFeature;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Unit;
 import net.codepoke.ai.challenge.hunterkiller.orders.BaseOrder;
 import net.codepoke.ai.challenge.hunterkiller.orders.UnitOrder;
@@ -60,11 +61,24 @@ public class TestBot
 			// Get all legal attack orders for this unit
 			List<UnitOrder> legalAttackOrders = MoveGenerator.getAllLegalOrders(state, unit, false, false, true);
 
-			// Remove all attacks without a proper target or ally target, unless it's a Medic's special attack
+			// Remove all attacks without a proper target
 			legalAttackOrders.removeIf((order) -> {
 				Unit target = map.getUnitAtLocation(order.getTargetLocation());
-				return target == null
-						|| (target.getControllingPlayerID() == unit.getControllingPlayerID() && !(order.getUnitType() == UnitType.Medic && order.getOrderType() == UnitOrderType.ATTACK_SPECIAL));
+				MapFeature feature = map.getFeatureAtLocation(order.getTargetLocation());
+				return target == null && !(feature instanceof Base);
+			});
+
+			// Remove all attack with an ally base as target
+			legalAttackOrders.removeIf(order -> {
+				MapFeature feature = map.getFeatureAtLocation(order.getTargetLocation());
+				return feature instanceof Base && ((Base) feature).getControllingPlayerID() == unit.getControllingPlayerID();
+			});
+
+			// Remove all attacks with an ally unit as target, unless the order is a Medic's special attack
+			legalAttackOrders.removeIf(order -> {
+				Unit target = map.getUnitAtLocation(order.getTargetLocation());
+				return target != null && target.getControllingPlayerID() == unit.getControllingPlayerID()
+						&& !(order.getUnitType() == UnitType.Medic && order.getOrderType() == UnitOrderType.ATTACK_SPECIAL);
 			});
 
 			double attackType = r.nextDouble();
