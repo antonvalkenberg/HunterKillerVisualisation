@@ -22,6 +22,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -35,6 +36,11 @@ public class DesktopLauncher {
 		settings.maxHeight = 2048;
 		settings.maxWidth = 2048;
 		settings.useIndexes = false;
+		settings.paddingX = settings.paddingY = 1;
+		settings.edgePadding = true;
+		settings.bleed = true;
+		settings.filterMin = TextureFilter.MipMapNearestNearest;
+		settings.filterMag = TextureFilter.MipMapNearestNearest;
 		// TexturePacker.process(settings, "imgs/", System.getProperty("user.dir"), "game.atlas");
 
 		// Start up the game
