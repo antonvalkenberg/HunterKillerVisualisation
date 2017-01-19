@@ -2,32 +2,39 @@
 game.png
 size: 256,64
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 fx/aoe
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 fx/attack
   rotate: false
-  xy: 36, 2
+  xy: 34, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 fx/heal
   rotate: false
-  xy: 70, 2
+  xy: 67, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+fx/heal - Copy
+  rotate: false
+  xy: 100, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 fx/melee
   rotate: false
-  xy: 104, 2
+  xy: 133, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -36,214 +43,214 @@ fx/melee
 game2.png
 size: 1024,32
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 map/base_p1
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/base_p2
   rotate: false
-  xy: 28, 2
+  xy: 26, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/base_p3
   rotate: false
-  xy: 54, 2
+  xy: 51, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/base_p4
   rotate: false
-  xy: 80, 2
+  xy: 76, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/door_closed
   rotate: false
-  xy: 106, 2
+  xy: 101, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/door_open
   rotate: false
-  xy: 132, 2
+  xy: 126, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/floor_1
   rotate: false
-  xy: 158, 2
+  xy: 151, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/floor_2
   rotate: false
-  xy: 184, 2
+  xy: 176, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/floor_3
   rotate: false
-  xy: 210, 2
+  xy: 201, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/floor_4
   rotate: false
-  xy: 236, 2
+  xy: 226, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/space
   rotate: false
-  xy: 262, 2
+  xy: 251, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_01
   rotate: false
-  xy: 288, 2
+  xy: 276, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_single
   rotate: false
-  xy: 288, 2
+  xy: 276, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_02
   rotate: false
-  xy: 314, 2
+  xy: 301, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_03
   rotate: false
-  xy: 340, 2
+  xy: 326, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_04
   rotate: false
-  xy: 366, 2
+  xy: 351, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_05
   rotate: false
-  xy: 392, 2
+  xy: 376, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_06
   rotate: false
-  xy: 418, 2
+  xy: 401, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_06b
   rotate: false
-  xy: 704, 2
+  xy: 676, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_07
   rotate: false
-  xy: 444, 2
+  xy: 426, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_07b
   rotate: false
-  xy: 730, 2
+  xy: 701, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_08
   rotate: false
-  xy: 470, 2
+  xy: 451, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_09
   rotate: false
-  xy: 496, 2
+  xy: 476, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_10
   rotate: false
-  xy: 522, 2
+  xy: 501, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_11
   rotate: false
-  xy: 548, 2
+  xy: 526, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_12
   rotate: false
-  xy: 574, 2
+  xy: 551, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_13
   rotate: false
-  xy: 600, 2
+  xy: 576, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_14
   rotate: false
-  xy: 626, 2
+  xy: 601, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_15
   rotate: false
-  xy: 652, 2
+  xy: 626, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_16
   rotate: false
-  xy: 678, 2
+  xy: 651, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -252,25 +259,25 @@ map/wall_16
 game3.png
 size: 256,128
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 ui/arrow_right
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 22, 21
   orig: 22, 21
   offset: 0, 0
   index: -1
 ui/bar
   rotate: false
-  xy: 198, 107
+  xy: 194, 105
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bar
   rotate: false
-  xy: 198, 76
+  xy: 194, 76
   size: 18, 9
   split: 5, 5, 0, 0
   orig: 18, 9
@@ -278,14 +285,14 @@ ui/bar
   index: -1
 ui/bar_blue
   rotate: false
-  xy: 26, 5
+  xy: 24, 4
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bar_filled
   rotate: false
-  xy: 218, 96
+  xy: 213, 95
   size: 18, 9
   split: 5, 5, 0, 0
   orig: 18, 9
@@ -293,98 +300,98 @@ ui/bar_filled
   index: -1
 ui/bar_green
   rotate: false
-  xy: 198, 87
+  xy: 194, 86
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bar_left
   rotate: false
-  xy: 238, 107
+  xy: 232, 105
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_left_blue
   rotate: false
-  xy: 66, 5
+  xy: 62, 4
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_left_green
   rotate: false
-  xy: 198, 56
+  xy: 194, 57
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_left_red
   rotate: false
-  xy: 218, 76
+  xy: 213, 76
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_left_yellow
   rotate: false
-  xy: 77, 5
+  xy: 242, 105
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_red
   rotate: false
-  xy: 218, 107
+  xy: 213, 105
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bar_right
   rotate: false
-  xy: 198, 36
+  xy: 72, 4
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_right_blue
   rotate: false
-  xy: 209, 56
+  xy: 194, 38
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_right_green
   rotate: false
-  xy: 88, 5
+  xy: 204, 57
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_right_red
   rotate: false
-  xy: 209, 36
+  xy: 82, 4
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_right_yellow
   rotate: false
-  xy: 229, 76
+  xy: 204, 38
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bar_yellow
   rotate: false
-  xy: 46, 5
+  xy: 43, 4
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/panel_beige
   rotate: false
-  xy: 2, 25
+  xy: 1, 23
   size: 100, 100
   split: 21, 53, 26, 33
   orig: 100, 100
@@ -392,7 +399,7 @@ ui/panel_beige
   index: -1
 ui/panel_btn_beige
   rotate: false
-  xy: 104, 80
+  xy: 102, 78
   size: 45, 45
   split: 17, 16, 17, 16
   orig: 45, 45
@@ -400,7 +407,7 @@ ui/panel_btn_beige
   index: -1
 ui/panel_btn_blue
   rotate: false
-  xy: 104, 33
+  xy: 102, 32
   size: 45, 45
   split: 17, 16, 17, 16
   orig: 45, 45
@@ -408,7 +415,7 @@ ui/panel_btn_blue
   index: -1
 ui/panel_btn_brown
   rotate: false
-  xy: 151, 80
+  xy: 148, 78
   size: 45, 45
   split: 17, 16, 17, 16
   orig: 45, 45
@@ -416,7 +423,7 @@ ui/panel_btn_brown
   index: -1
 ui/panel_btn_white
   rotate: false
-  xy: 151, 33
+  xy: 148, 32
   size: 45, 45
   split: 17, 16, 17, 16
   orig: 45, 45
@@ -426,109 +433,109 @@ ui/panel_btn_white
 game4.png
 size: 256,32
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 ui/bars/bar
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_1
   rotate: false
-  xy: 22, 2
+  xy: 20, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_2
   rotate: false
-  xy: 42, 2
+  xy: 39, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_3
   rotate: false
-  xy: 62, 2
+  xy: 58, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_4
   rotate: false
-  xy: 82, 2
+  xy: 77, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_left
   rotate: false
-  xy: 102, 2
+  xy: 96, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_left_1
   rotate: false
-  xy: 113, 2
+  xy: 106, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_left_2
   rotate: false
-  xy: 124, 2
+  xy: 116, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_left_3
   rotate: false
-  xy: 135, 2
+  xy: 126, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_left_4
   rotate: false
-  xy: 146, 2
+  xy: 136, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_right
   rotate: false
-  xy: 157, 2
+  xy: 146, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_right_1
   rotate: false
-  xy: 168, 2
+  xy: 156, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_right_2
   rotate: false
-  xy: 179, 2
+  xy: 166, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_right_3
   rotate: false
-  xy: 190, 2
+  xy: 176, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
   index: -1
 ui/bars/bar_right_4
   rotate: false
-  xy: 201, 2
+  xy: 186, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
@@ -537,150 +544,150 @@ ui/bars/bar_right_4
 game5.png
 size: 64,32
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 ui/btns/btn_down
   rotate: false
-  xy: 29, 4
+  xy: 27, 3
   size: 25, 23
   orig: 25, 23
   offset: 0, 0
   index: -1
 ui/btns/btn_up
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 25, 25
   orig: 25, 25
   offset: 0, 0
   index: -1
 
 game6.png
-size: 512,32
+size: 128,64
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 ui/controls/end
   rotate: false
-  xy: 170, 3
+  xy: 61, 44
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/end_over
   rotate: false
-  xy: 2, 2
+  xy: 1, 43
   size: 19, 20
   orig: 19, 20
   offset: 0, 0
   index: -1
 ui/controls/faster
   rotate: false
-  xy: 191, 3
+  xy: 41, 2
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/faster_over
   rotate: false
-  xy: 23, 2
+  xy: 1, 22
   size: 19, 20
   orig: 19, 20
   offset: 0, 0
   index: -1
 ui/controls/larger
   rotate: false
-  xy: 212, 3
+  xy: 61, 24
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/larger_over
   rotate: false
-  xy: 233, 3
+  xy: 81, 44
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/next
   rotate: false
-  xy: 254, 3
+  xy: 61, 4
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/next_over
   rotate: false
-  xy: 44, 2
+  xy: 1, 1
   size: 19, 20
   orig: 19, 20
   offset: 0, 0
   index: -1
 ui/controls/pause
   rotate: false
-  xy: 275, 3
+  xy: 81, 24
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/pause_over
   rotate: false
-  xy: 65, 2
+  xy: 21, 43
   size: 19, 20
   orig: 19, 20
   offset: 0, 0
   index: -1
 ui/controls/play
   rotate: false
-  xy: 296, 3
+  xy: 101, 44
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/play_over
   rotate: false
-  xy: 86, 2
+  xy: 21, 22
   size: 19, 20
   orig: 19, 20
   offset: 0, 0
   index: -1
 ui/controls/previous
   rotate: false
-  xy: 317, 3
+  xy: 81, 4
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/previous_over
   rotate: false
-  xy: 107, 2
+  xy: 21, 1
   size: 19, 20
   orig: 19, 20
   offset: 0, 0
   index: -1
 ui/controls/slower
   rotate: false
-  xy: 338, 3
+  xy: 101, 24
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/slower_over
   rotate: false
-  xy: 128, 2
+  xy: 41, 43
   size: 19, 20
   orig: 19, 20
   offset: 0, 0
   index: -1
 ui/controls/start
   rotate: false
-  xy: 359, 3
+  xy: 101, 4
   size: 19, 19
   orig: 19, 19
   offset: 0, 0
   index: -1
 ui/controls/start_over
   rotate: false
-  xy: 149, 2
+  xy: 41, 22
   size: 19, 20
   orig: 19, 20
   offset: 0, 0
@@ -689,88 +696,88 @@ ui/controls/start_over
 game7.png
 size: 512,32
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 units/infected_p1
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/infected_p2
   rotate: false
-  xy: 28, 2
+  xy: 26, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/infected_p3
   rotate: false
-  xy: 54, 2
+  xy: 51, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/infected_p4
   rotate: false
-  xy: 80, 2
+  xy: 76, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/medic_p1
   rotate: false
-  xy: 106, 2
+  xy: 101, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/medic_p2
   rotate: false
-  xy: 132, 2
+  xy: 126, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/medic_p3
   rotate: false
-  xy: 158, 2
+  xy: 151, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/medic_p4
   rotate: false
-  xy: 184, 2
+  xy: 176, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/soldier_p1
   rotate: false
-  xy: 210, 2
+  xy: 201, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/soldier_p2
   rotate: false
-  xy: 236, 2
+  xy: 226, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/soldier_p3
   rotate: false
-  xy: 262, 2
+  xy: 251, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 units/soldier_p4
   rotate: false
-  xy: 288, 2
+  xy: 276, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0

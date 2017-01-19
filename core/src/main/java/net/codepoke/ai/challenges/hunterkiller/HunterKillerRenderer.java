@@ -52,7 +52,7 @@ public class HunterKillerRenderer
 	/**
 	 * The size at which the tiles will be displayed.
 	 */
-	public static final int TILE_SIZE_DRAW = 24;
+	public static int TILE_SIZE_DRAW = 24;
 	/**
 	 * The scale that libgdx should apply when rotating or transforming.
 	 */
@@ -68,11 +68,6 @@ public class HunterKillerRenderer
 	private BitmapFont defaultFont;
 
 	/**
-	 * A smaller font than the default font
-	 */
-	private BitmapFont smallFont;
-
-	/**
 	 * Cache containing non-changing textures.
 	 */
 	private IntMap<TextureRegion> mapCache;
@@ -82,8 +77,7 @@ public class HunterKillerRenderer
 
 	public HunterKillerRenderer(MatchVisualization<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		super(parent, skin);
-		defaultFont = skin.getFont("default-font");
-		smallFont = skin.getFont("kenny-8-font");
+		defaultFont = skin.getFont("kenny-8outlined-font");
 		controlledTextures = new ObjectMap<Class, String[]>();
 
 		controlledTextures.put(Base.class, new String[4]);
@@ -115,6 +109,9 @@ public class HunterKillerRenderer
 
 		float x = getX(), y = getY();
 
+		// Make sure we are drawing at the selected scale
+		TILE_SIZE_DRAW = (int) (TILE_SIZE_ORIGINAL * scale);
+
 		// Create a new DrawHelper to assist with calculating the coordinates of where to draw things.
 		DrawHelper dh = new DrawHelper(x, y);
 
@@ -125,7 +122,114 @@ public class HunterKillerRenderer
 		HashSet<MapLocation> fovSet = state.getPlayer(state.getCurrentPlayer())
 											.getCombinedFieldOfView(map);
 
-		// Go through the map
+		// Go through the map to draw the map features first
+		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
+			for (int yCoord = 0; yCoord < map.getMapHeight(); yCoord++) {
+				// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
+				int flippedY = (map.getMapHeight() - 1) - yCoord;
+
+				// Check if this location should be tinted
+				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
+
+				// Save the original colors, so we can set them back later
+				Color originalColor = batch.getColor();
+				Color originalFontColor = defaultFont.getColor();
+
+				// Change the color if we need to tint this location
+				if (tinted) {
+					batch.setColor(Color.GRAY);
+				}
+
+				// Change the font's scale
+				float ogFontScaleX = defaultFont.getData().scaleX;
+				float ogFontScaleY = defaultFont.getData().scaleY;
+				defaultFont.getData().scaleX *= scale;
+				defaultFont.getData().scaleY *= scale;
+
+				// Get the objects on this tile of the map
+				int mapPosition = map.toPosition(xCoord, flippedY);
+				GameObject[] tile = objects[mapPosition];
+
+				// Calculate all our drawing coordinates
+				dh.calculateDrawCoordinates(xCoord, yCoord);
+
+				// Draw MapFeatures first, since Units are drawn on top of those
+
+				GameObject object = tile[Constants.MAP_INTERNAL_FEATURE_INDEX];
+
+				// Check if this position has been cached
+				if (mapCache.containsKey(mapPosition)) {
+					batch.draw(mapCache.get(mapPosition), dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);
+				}
+
+				else if (object instanceof Base) {
+					// Draw a different color based on team
+					Base base = (Base) object;
+					String baseImg = getTextureLocation(base);
+					batch.draw(skin.getRegion(baseImg), dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);
+
+					// Draw the player's resource amount
+					int resource = state.getPlayer(base.getControllingPlayerID())
+										.getResource();
+					defaultFont.setColor(Color.CYAN);
+					defaultFont.draw(batch, "" + resource, dh.drawXBaseHP, dh.drawYBaseHP);
+
+					// Draw the base's health
+					int health = base.getHpCurrent();
+					defaultFont.setColor(Color.RED);
+					defaultFont.draw(batch, "" + health, dh.drawXUnitHP, dh.drawYUnitHP);
+
+				} else if (object instanceof Door) {
+					// Get the positions around the Door
+					MapFeature[] features = map.getMapFeaturesAround(map.toLocation(mapPosition));
+					// If indexes 1 and 7 have a Wall, we'll need to rotate the Door 90 degrees
+					float rotation = (features[1] instanceof Wall && features[7] instanceof Wall) ? 90 : 0;
+
+					// Check for open/closed
+					Door door = (Door) object;
+
+					// If the door is open, we want to draw a Floor as background image, so draw it first
+					if (door.isOpen()) {
+						batch.draw(skin.getRegion("map/floor_1"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+					}
+
+					// Draw the door
+					batch.draw(	skin.getRegion(door.isOpen() ? "map/door_open" : "map/door_closed"),
+								dh.drawX,
+								dh.drawY,
+								dh.originX,
+								dh.originY,
+								dh.tileWidth,
+								dh.tileHeight,
+								dh.scaleX,
+								dh.scaleY,
+								rotation);
+
+					// If the door is open, we want to draw a timer to show when it closes, this should be on top
+					if (door.isOpen()) {
+						// Draw the open-time remaining
+						int time = door.getOpenTimer();
+						defaultFont.setColor(Color.CYAN);
+						defaultFont.draw(batch, "" + time, dh.drawXBaseRes, dh.drawYBaseRes);
+					}
+
+				} else if (object instanceof Floor) {
+					batch.draw(skin.getRegion("map/floor_1"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+				} else if (object instanceof Space) {
+					batch.draw(skin.getRegion("map/space"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+				} else if (object instanceof Wall) {
+					batch.draw(skin.getRegion("map/wall_single"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+				}
+
+				// Restore the original settings
+				batch.setColor(originalColor);
+				defaultFont.setColor(originalFontColor);
+				defaultFont.getData().scaleX = ogFontScaleX;
+				defaultFont.getData().scaleY = ogFontScaleY;
+			}
+		}
+
+		// Go through the map a second time to draw the units
 		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
 			for (int yCoord = 0; yCoord < map.getMapHeight(); yCoord++) {
 				// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
@@ -135,13 +239,18 @@ public class HunterKillerRenderer
 				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
 				// Save the original colors, so we can set them back later
 				Color originalColor = batch.getColor();
-				Color originalDefaultFontColor = defaultFont.getColor();
-				Color originalSmallFontColor = smallFont.getColor();
+				Color originalFontColor = defaultFont.getColor();
 
 				// Change the color if we need to tint this location
 				if (tinted) {
 					batch.setColor(Color.GRAY);
 				}
+
+				// Change the font's scale
+				float ogFontScaleX = defaultFont.getData().scaleX;
+				float ogFontScaleY = defaultFont.getData().scaleY;
+				defaultFont.getData().scaleX *= scale;
+				defaultFont.getData().scaleY *= scale;
 
 				// Get the objects on this tile of the map
 				int mapPosition = map.toPosition(xCoord, flippedY);
@@ -150,71 +259,7 @@ public class HunterKillerRenderer
 				// Calculate all our drawing coordinates
 				dh.calculateDrawCoordinates(xCoord, yCoord);
 
-				// Handle the two levels of the Map, MapFeatures first, since Units are drawn on top of those
-				if (tile[Constants.MAP_INTERNAL_FEATURE_INDEX] != null) {
-					// Draw MapFeatures
-					GameObject object = tile[Constants.MAP_INTERNAL_FEATURE_INDEX];
-
-					// Check if this position has been cached
-					if (mapCache.containsKey(mapPosition)) {
-						batch.draw(mapCache.get(mapPosition), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-					}
-
-					//@formatter:off
-					else if (object instanceof Base) {
-						//Draw a different color based on team
-						Base base = (Base)object;
-						String baseImg = getTextureLocation(base);						
-						batch.draw(skin.getRegion(baseImg), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-						
-						//Draw the player's resource amount
-						int resource = state.getPlayer(base.getControllingPlayerID()).getResource();
-						defaultFont.setColor(Color.BLUE);
-						defaultFont.draw(batch, "" +  resource, dh.drawXBaseRes, dh.drawYBaseRes);
-						
-						//Draw the base's health
-						int health = base.getHpCurrent();
-						defaultFont.setColor(Color.RED);
-						defaultFont.draw(batch, "" +  health, dh.drawXBaseHP, dh.drawYBaseHP);
-						
-					} else if (object instanceof Door) {
-						// Get the positions around the Door
-						MapFeature[] features = map.getMapFeaturesAround(map.toLocation(mapPosition));
-						//If indexes 1 and 7 have a Wall, we'll need to rotate the Door 90 degrees
-						float rotation = (features[1] instanceof Wall && features[7] instanceof Wall) ? 90 : 0;
-						
-						// Check for open/closed
-						Door door = (Door)object;
-						
-						//If the door is open, we want to draw a Floor as background image, so draw it first
-						if (door.isOpen()) {
-							batch.draw(skin.getRegion("map/floor_1"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-						}
-						
-						//Draw the door
-						batch.draw(skin.getRegion(door.isOpen() ? "map/door_open" : "map/door_closed"),
-						           dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, dh.scaleX, dh.scaleY, rotation);
-						
-						//If the door is open, we want to draw a timer to show when it closes, this should be on top
-						if (door.isOpen()) {
-							//Draw the open-time remaining
-							int time = door.getOpenTimer();
-							defaultFont.setColor(Color.BLUE);
-							defaultFont.draw(batch, "" +  time, dh.drawXBaseRes, dh.drawYBaseRes);
-						}
-						
-					} else if (object instanceof Floor) {
-						batch.draw(skin.getRegion("map/floor_1"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-					} else if (object instanceof Space) {
-						batch.draw(skin.getRegion("map/space"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-					} else if (object instanceof Wall) {
-						batch.draw(skin.getRegion("map/wall_single"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
-					}
-					//@formatter:on
-
-				} else {
-					// This is a problem, there should always be a MapFeature on a tile
-				}
+				// Check if there is a unit on this location
 				if (tile[Constants.MAP_INTERNAL_UNIT_INDEX] != null) {
 					// Draw Units
 					Unit unit = (Unit) tile[Constants.MAP_INTERNAL_UNIT_INDEX];
@@ -231,37 +276,43 @@ public class HunterKillerRenderer
 						unitScaleX = -unitScaleX;
 					}
 
-					//@formatter:off
-
 					String unitImg = getTextureLocation(unit);
-					batch.draw(skin.getRegion(unitImg), dh.drawX, dh.drawY, dh.originX, dh.originY, dh.tileWidth, dh.tileHeight, unitScaleX, unitScaleY, rotation);
-					
-					//Draw the unit's HP and cooldown
+					batch.draw(skin.getRegion(unitImg), dh.drawX, dh.drawY + 4 * scale, // Raise the unit off the base
+																						// of the tile slightly, to
+																						// cause a 3D effect
+								dh.originX,
+								dh.originY,
+								dh.tileWidth,
+								dh.tileHeight,
+								unitScaleX,
+								unitScaleY,
+								rotation);
+
+					// Draw the unit's HP and cooldown
 					int hp = unit.getHpCurrent();
 					defaultFont.setColor(Color.RED);
 					defaultFont.draw(batch, "" + hp, dh.drawXUnitHP, dh.drawYUnitHP);
-					
+
 					int cd = unit.getSpecialAttackCooldown();
-					//Only draw the cooldown if it's on (>0)
+					// Only draw the cooldown if it's on (>0)
 					if (cd > 0) {
-						defaultFont.setColor(Color.BLUE);
+						defaultFont.setColor(Color.CYAN);
 						defaultFont.draw(batch, "" + cd, dh.drawXUnitCD, dh.drawYUnitCD);
 					}
-					
-					//Draw a Unit's ID if CTRL is pressed
+
+					// Draw a Unit's ID if CTRL is pressed
 					if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT)) {
 						int unitID = unit.getID();
 						defaultFont.setColor(Color.GREEN);
 						defaultFont.draw(batch, "" + unitID, dh.drawXBaseHP, dh.drawYBaseHP);
 					}
-					
-					//@formatter:on
 				}
 
-				// Restore the original colors
+				// Restore the original settings
 				batch.setColor(originalColor);
-				defaultFont.setColor(originalDefaultFontColor);
-				smallFont.setColor(originalSmallFontColor);
+				defaultFont.setColor(originalFontColor);
+				defaultFont.getData().scaleX = ogFontScaleX;
+				defaultFont.getData().scaleY = ogFontScaleY;
 			}
 		}
 
@@ -520,13 +571,13 @@ public class HunterKillerRenderer
 	@Override
 	public float getPrefWidth() {
 		return (state != null ? state.getMap()
-										.getMapWidth() * TILE_SIZE_DRAW : 0);
+										.getMapWidth() * TILE_SIZE_ORIGINAL * scale : 0);
 	}
 
 	@Override
 	public float getPrefHeight() {
 		return (state != null ? state.getMap()
-										.getMapHeight() * TILE_SIZE_DRAW : 0);
+										.getMapHeight() * TILE_SIZE_ORIGINAL * scale : 0);
 	}
 
 	/**

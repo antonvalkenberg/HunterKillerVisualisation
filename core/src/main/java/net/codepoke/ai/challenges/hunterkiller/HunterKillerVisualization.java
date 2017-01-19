@@ -11,16 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class HunterKillerVisualization
 		extends MatchVisualization<HunterKillerState, HunterKillerAction> {
 
-	public HunterKillerRenderer renderer;
-
 	public HunterKillerVisualization() {
 		super(new HunterKillerRules());
 	}
 
 	@Override
 	public HunterKillerRenderer createRenderer(MatchVisualization<HunterKillerState, HunterKillerAction> parent, Skin skin) {
-		renderer = new HunterKillerRenderer(parent, skin);
-		return renderer;
+		return new HunterKillerRenderer(parent, skin);
 	}
 
 	@Override

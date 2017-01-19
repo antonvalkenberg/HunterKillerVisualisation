@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -30,6 +31,9 @@ public class MatchControls
 	/** The controls to be used for playing back the match. ( |< << < >/|| > >> >>| ) */
 	Button start, slower, previous, playPause, next, faster, end;
 
+	/** Handles the scaling of the rendering (1x, 1.5x, 2x) */
+	TextButton scale;
+
 	/** Displays current playbackspeed. */
 	Label speedLbl;
 
@@ -43,7 +47,7 @@ public class MatchControls
 	// Counter to go to the next round if we are playing back.
 	private float currentDt = 0;
 
-	public MatchControls(MatchVisualization parent, Skin skin) {
+	public MatchControls(final MatchVisualization parent, Skin skin) {
 
 		this.parent = parent;
 		this.skin = skin;
@@ -58,6 +62,7 @@ public class MatchControls
 		end = new ImageButton(skin, "end");
 		previous = new ImageButton(skin, "previous");
 		next = new ImageButton(skin, "next");
+		scale = new TextButton("1.0", skin);
 
 		speedLbl = new Label(">> 1x", skin);
 		roundLbl = new Label("Round: 1 / 100", skin);
@@ -124,6 +129,36 @@ public class MatchControls
 			}
 		});
 
+		scale.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+
+				if (parent.board.scale == 1)
+					parent.board.scale = 1.5f;
+				else if (parent.board.scale == 1.5f)
+					parent.board.scale = 2f;
+				else if (parent.board.scale == 2)
+					parent.board.scale = 1f;
+
+				scale.setText(String.format("%1.1f", parent.board.scale));
+
+				parent.board.invalidateHierarchy();
+				parent.rootTable.invalidateHierarchy();
+				parent.rootTable.layout();
+				parent.rootTable.pack();
+
+				Gdx.app.postRunnable(new Runnable() {
+
+					@Override
+					public void run() {
+						Gdx.app.getGraphics()
+								.setWindowedMode((int) parent.rootTable.getPrefWidth(), (int) parent.rootTable.getPrefHeight());
+					}
+
+				});
+			}
+		});
+
 		// Fast / Slow controls
 		slower.addListener(new ClickListener() {
 			@Override
@@ -184,6 +219,7 @@ public class MatchControls
 		controls.add(next);
 		controls.add(faster);
 		controls.add(end);
+		controls.add(scale);
 
 		Table speedOverlay = new Table();
 		speedOverlay.add(speedLbl)

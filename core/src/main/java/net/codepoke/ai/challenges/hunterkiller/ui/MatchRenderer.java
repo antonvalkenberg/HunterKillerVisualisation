@@ -1,25 +1,29 @@
 package net.codepoke.ai.challenges.hunterkiller.ui;
 
+import net.codepoke.ai.Action;
+import net.codepoke.ai.State;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
-import net.codepoke.ai.Action;
-import net.codepoke.ai.State;
-
-public abstract class MatchRenderer<S extends State, A extends Action> extends Widget {
+public abstract class MatchRenderer<S extends State, A extends Action>
+		extends Widget {
 
 	/** The current State we are rendering. */
 	protected S state;
-	
+
 	/** The action that led to this state, potentially null. */
 	protected A action;
-	
+
 	protected MatchVisualization<S, A> parent;
-	
+
 	protected Skin skin;
 
-	public MatchRenderer(MatchVisualization<S,A> parent, Skin skin) {
+	/** The scale with which should be rendered, set through controls to 1, 1.5, 2 */
+	protected float scale = 1;
+
+	public MatchRenderer(MatchVisualization<S, A> parent, Skin skin) {
 		this.skin = skin;
 		this.parent = parent;
 	}
@@ -28,26 +32,28 @@ public abstract class MatchRenderer<S extends State, A extends Action> extends W
 		super.draw(batch, parentAlpha);
 		onDraw(batch, parentAlpha);
 	}
-	
+
 	public abstract void onDraw(Batch batch, float parentAlpha);
-	
+
 	@Override
 	public abstract float getPrefWidth();
-	
+
 	@Override
 	public abstract float getPrefHeight();
-	
-	
+
 	/**
 	 * Getters / Setters
 	 */
-	
-	
+
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+
 	public S getState() {
 		return state;
 	}
-	
-	public A getAction(){
+
+	public A getAction() {
 		return action;
 	}
 
@@ -57,5 +63,5 @@ public abstract class MatchRenderer<S extends State, A extends Action> extends W
 		setSize(getPrefWidth(), getPrefHeight());
 		invalidateHierarchy();
 	}
-	
+
 }
