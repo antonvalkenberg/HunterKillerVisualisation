@@ -146,7 +146,6 @@ public class MatchControls
 				parent.rootTable.invalidateHierarchy();
 				parent.rootTable.layout();
 				parent.rootTable.pack();
-
 				Gdx.app.postRunnable(new Runnable() {
 
 					@Override

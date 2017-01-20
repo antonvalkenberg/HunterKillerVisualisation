@@ -35,7 +35,7 @@ public class DesktopLauncher {
 		TexturePacker.Settings settings = new TexturePacker.Settings();
 		settings.maxHeight = 2048;
 		settings.maxWidth = 2048;
-		settings.useIndexes = false;
+		settings.useIndexes = true;
 		settings.paddingX = settings.paddingY = 1;
 		settings.edgePadding = true;
 		settings.bleed = true;
