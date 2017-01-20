@@ -130,7 +130,7 @@ public class HunterKillerRenderer
 
 				// Check if this location should be tinted
 				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
-
+				tinted &= !Gdx.input.isKeyPressed(Keys.ALT_LEFT);
 
 				// Get the objects on this tile of the map
 				int mapPosition = map.toPosition(xCoord, flippedY);
@@ -240,6 +240,8 @@ public class HunterKillerRenderer
 
 				// Check if this location should be tinted
 				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
+				tinted &= !Gdx.input.isKeyPressed(Keys.ALT_LEFT);
+				
 				// Save the original colors, so we can set them back later
 				Color originalColor = batch.getColor();
 				Color originalFontColor = defaultFont.getColor();
