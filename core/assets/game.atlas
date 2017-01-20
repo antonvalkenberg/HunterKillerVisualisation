@@ -25,16 +25,9 @@ fx/heal
   orig: 32, 32
   offset: 0, 0
   index: -1
-fx/heal - Copy
-  rotate: false
-  xy: 100, 1
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
 fx/melee
   rotate: false
-  xy: 133, 1
+  xy: 100, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -87,170 +80,219 @@ map/door_open
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/floor_1
+map/floor
   rotate: false
   xy: 151, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/floor_2
+  index: 0
+map/floor
   rotate: false
   xy: 176, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/floor_3
+  index: 1
+map/floor
   rotate: false
   xy: 201, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/floor_4
+  index: 2
+map/floor
   rotate: false
   xy: 226, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 3
 map/space
   rotate: false
   xy: 251, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall_01
+  index: 0
+map/space
   rotate: false
   xy: 276, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall_single
-  rotate: false
-  xy: 276, 1
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-map/wall_02
+  index: 1
+map/space
   rotate: false
   xy: 301, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall_03
+  index: 2
+map/space
   rotate: false
   xy: 326, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall_04
+  index: 3
+map/wall[0]
   rotate: false
   xy: 351, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall_05
+map/wall_single
+  rotate: false
+  xy: 351, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/wall[10]
   rotate: false
   xy: 376, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall_06
+  index: 0
+map/wall[10]
   rotate: false
   xy: 401, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall_06b
-  rotate: false
-  xy: 676, 1
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-map/wall_07
+  index: 1
+map/wall[10]
   rotate: false
   xy: 426, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall_07b
-  rotate: false
-  xy: 701, 1
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-map/wall_08
+  index: 2
+map/wall[10]
   rotate: false
   xy: 451, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall_09
+  index: 3
+map/wall[11]
   rotate: false
   xy: 476, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall_10
+map/wall[12]
   rotate: false
   xy: 501, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall_11
+map/wall[13]
   rotate: false
   xy: 526, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall_12
+map/wall[14]
   rotate: false
   xy: 551, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall_13
+map/wall[15]
   rotate: false
   xy: 576, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall_14
+map/wall[1]
   rotate: false
   xy: 601, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall_15
+map/wall[2]
   rotate: false
   xy: 626, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall_16
+map/wall[3]
   rotate: false
   xy: 651, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/wall[4]
+  rotate: false
+  xy: 676, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/wall[5]
+  rotate: false
+  xy: 701, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+map/wall[5]
+  rotate: false
+  xy: 726, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+map/wall[5]
+  rotate: false
+  xy: 751, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 2
+map/wall[5]
+  rotate: false
+  xy: 776, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 3
+map/wall[6]
+  rotate: false
+  xy: 801, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/wall[7]
+  rotate: false
+  xy: 826, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/wall[8]
+  rotate: false
+  xy: 851, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/wall[9]
+  rotate: false
+  xy: 876, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
@@ -442,34 +484,34 @@ ui/bars/bar
   orig: 18, 18
   offset: 0, 0
   index: -1
-ui/bars/bar_1
+ui/bars/bar
   rotate: false
   xy: 20, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_2
+  index: 1
+ui/bars/bar
   rotate: false
   xy: 39, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_3
+  index: 2
+ui/bars/bar
   rotate: false
   xy: 58, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_4
+  index: 3
+ui/bars/bar
   rotate: false
   xy: 77, 1
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
-  index: -1
+  index: 4
 ui/bars/bar_left
   rotate: false
   xy: 96, 1
@@ -477,34 +519,34 @@ ui/bars/bar_left
   orig: 9, 18
   offset: 0, 0
   index: -1
-ui/bars/bar_left_1
+ui/bars/bar_left
   rotate: false
   xy: 106, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_left_2
+  index: 1
+ui/bars/bar_left
   rotate: false
   xy: 116, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_left_3
+  index: 2
+ui/bars/bar_left
   rotate: false
   xy: 126, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_left_4
+  index: 3
+ui/bars/bar_left
   rotate: false
   xy: 136, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
-  index: -1
+  index: 4
 ui/bars/bar_right
   rotate: false
   xy: 146, 1
@@ -512,34 +554,34 @@ ui/bars/bar_right
   orig: 9, 18
   offset: 0, 0
   index: -1
-ui/bars/bar_right_1
+ui/bars/bar_right
   rotate: false
   xy: 156, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_right_2
+  index: 1
+ui/bars/bar_right
   rotate: false
   xy: 166, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_right_3
+  index: 2
+ui/bars/bar_right
   rotate: false
   xy: 176, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
-  index: -1
-ui/bars/bar_right_4
+  index: 3
+ui/bars/bar_right
   rotate: false
   xy: 186, 1
   size: 9, 18
   orig: 9, 18
   offset: 0, 0
-  index: -1
+  index: 4
 
 game5.png
 size: 64,32
@@ -704,81 +746,137 @@ units/infected_p1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 0
 units/infected_p2
   rotate: false
   xy: 26, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 0
 units/infected_p3
   rotate: false
   xy: 51, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 0
 units/infected_p4
   rotate: false
   xy: 76, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 0
 units/medic_p1
   rotate: false
   xy: 101, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-units/medic_p2
+  index: 0
+units/medic_p1
   rotate: false
   xy: 126, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-units/medic_p3
+  index: 1
+units/medic_p2
   rotate: false
   xy: 151, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-units/medic_p4
+  index: 0
+units/medic_p2
   rotate: false
   xy: 176, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-units/soldier_p1
+  index: 1
+units/medic_p3
   rotate: false
   xy: 201, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-units/soldier_p2
+  index: 0
+units/medic_p3
   rotate: false
   xy: 226, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-units/soldier_p3
+  index: 1
+units/medic_p4
   rotate: false
   xy: 251, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-units/soldier_p4
+  index: 0
+units/medic_p4
   rotate: false
   xy: 276, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 1
+units/soldier_p1
+  rotate: false
+  xy: 301, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+units/soldier_p1
+  rotate: false
+  xy: 326, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+units/soldier_p2
+  rotate: false
+  xy: 351, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+units/soldier_p2
+  rotate: false
+  xy: 376, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+units/soldier_p3
+  rotate: false
+  xy: 401, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+units/soldier_p3
+  rotate: false
+  xy: 426, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+units/soldier_p4
+  rotate: false
+  xy: 451, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+units/soldier_p4
+  rotate: false
+  xy: 476, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
