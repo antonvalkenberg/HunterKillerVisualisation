@@ -264,6 +264,10 @@ public class MatchControls
 		} else if (Gdx.input.isKeyJustPressed(Keys.RIGHT)) {
 			timeline.setValue(timeline.getValue() + playbackSpeed);
 			Gdx.graphics.requestRendering();
+		} else if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
+			playingBack = !playingBack;		
+			playPause.setChecked(playingBack);	
+			Gdx.graphics.requestRendering();
 		}
 
 		if (currentDt > 0.125f) {
