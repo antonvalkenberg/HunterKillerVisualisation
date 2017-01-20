@@ -74,7 +74,7 @@ public class HunterKillerRenderer
 	/**
 	 * Cache containing non-changing textures.
 	 */
-	private IntMap<TextureRegion> mapCache;
+	private IntMap<Array<TextureRegion>> mapCache;
 
 	/** Cache of Type to a list texture names (indexed on player ID) for Controlled */
 	private ObjectMap<Class, String[]> controlledTextures;
@@ -111,9 +111,9 @@ public class HunterKillerRenderer
 			return;
 
 		// Initialize the cache
-		if (mapCache == null) {
+		//if (mapCache == null) {
 			createMapCache(state);
-		}
+		//}
 
 		// WARNING: Null on initial state!
 		HunterKillerAction action = getAction();
@@ -173,7 +173,9 @@ public class HunterKillerRenderer
 
 				// Check if this position has been cached
 				if (mapCache.containsKey(mapPosition)) {
-					batch.draw(mapCache.get(mapPosition), dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);
+					for (TextureRegion region : mapCache.get(mapPosition)) {
+						batch.draw(region, dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);						
+					}
 				}
 
 				else if (object instanceof Base) {
@@ -475,13 +477,14 @@ public class HunterKillerRenderer
 	 */
 	public void createMapCache(HunterKillerState orgState) {
 		// Create a new cache
-		mapCache = new IntMap<TextureRegion>();
+		mapCache = new IntMap<Array<TextureRegion>>();
 
 		Map map = orgState.getMap();
 		// Get the map content we are trying to cache
 		GameObject[][] content = map.getMapContent();
 
 		Random r = new Random(4);
+		Array<TextureRegion> cell = new Array<TextureRegion>();
 		
 		// Traverse the content of the map
 		for (int position = 0; position < content.length; position++) {
@@ -501,16 +504,46 @@ public class HunterKillerRenderer
 				// starting from index 0, to 8.
 				MapFeature[] features = map.getMapFeaturesAround(map.toLocation(position));
 				
-				int mask = isWalled(features, 1) ? UP_MASK : 0;
-				mask |= isWalled(features, 5) ? RIGHT_MASK : 0; 
-				mask |= isWalled(features, 7) ? DOWN_MASK : 0;
-				mask |= isWalled(features, 3) ? LEFT_MASK : 0;
+				int wallMask = isWalled(features, 1) ? UP_MASK : 0;
+				wallMask |= isWalled(features, 5) ? RIGHT_MASK : 0; 
+				wallMask |= isWalled(features, 7) ? DOWN_MASK : 0;
+				wallMask |= isWalled(features, 3) ? LEFT_MASK : 0;
 
-				mapCache.put(position, sample("map/wall["+mask+"]", weight));				
+				cell.add(sample("map/wall["+wallMask+"]", weight));			
 			} else if (feature instanceof Floor) {
-				mapCache.put(position, sample("map/floor", weight));
+				// Add floor
+				cell.add(sample("map/floor", weight));
+				
+				// Add shadow for walls, and random cobwebs
+				MapFeature[] features = map.getMapFeaturesAround(map.toLocation(position));
+				
+				int wallMask = isWalled(features, 1) ? UP_MASK : 0;
+				wallMask |= isWalled(features, 5) ? RIGHT_MASK : 0; 
+				wallMask |= isWalled(features, 7) ? DOWN_MASK : 0;
+				wallMask |= isWalled(features, 3) ? LEFT_MASK : 0;
+				
+				if((wallMask & UP_MASK) != 0){
+					// Draw shadow
+					cell.add(skin.getRegion("map/decals/wall_shadow"));
+				}
+				
+				// Draw cobwebs only for some arbitrary weight
+				if(weight > 1.3f){
+					String key = "map/decals/cobweb["+wallMask+"]";
+					if(skin.has(key, TextureRegion.class)){
+						cell.add(skin.getRegion(key));
+					}
+				}
+				
 			} else if (feature instanceof Space) {
-				mapCache.put(position, sample("map/space", weight));
+				cell.add(sample("map/space", weight));
+			}
+			
+			// If we added anything, add it to the cache.
+			// (We don't realloc for every position as we might not need to draw on each tile.)
+			if(cell.size > 0){
+				mapCache.put(position, new Array<TextureRegion>(cell));
+				cell.clear();
 			}
 		}
 	}
