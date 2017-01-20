@@ -18,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class MatchVisualization<S extends State, A extends Action>
@@ -69,6 +71,15 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	public final void create() {
 
 		Gdx.graphics.setContinuousRendering(false);
+		
+		// Repaint every second
+		Timer.schedule(new Task() {
+			
+			@Override
+			public void run() {
+				Gdx.graphics.requestRendering();
+			}
+		}, 1, 1);
 
 		Skin uiSkin = new Skin();
 		uiSkin.addRegions(new TextureAtlas(Gdx.files.internal("game.atlas")));
@@ -157,7 +168,8 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 
 	@Override
 	public synchronized void render() {
-		stage.act(1 / 60f);
+		
+		stage.act(Gdx.graphics.getDeltaTime());
 
 		int currentRound = controls.getCurrentRound();
 
