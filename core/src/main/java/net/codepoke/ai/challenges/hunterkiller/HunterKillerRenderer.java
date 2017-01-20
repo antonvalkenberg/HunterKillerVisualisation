@@ -78,6 +78,10 @@ public class HunterKillerRenderer
 
 	/** Cache of Type to a list texture names (indexed on player ID) for Controlled */
 	private ObjectMap<Class, String[]> controlledTextures;
+	
+	/** A counter used to draw a different frame every 1s. Resets on arbitrary 1000.*/
+	private int ticks = 0;
+	private float timePassed;
 
 	public HunterKillerRenderer(MatchVisualization<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		super(parent, skin);
@@ -100,6 +104,9 @@ public class HunterKillerRenderer
 	@Override
 	public void onDraw(Batch batch, float parentAlpha) {
 
+		timePassed = (timePassed + Gdx.graphics.getDeltaTime() % 1000);
+		ticks = (int)Math.floor(timePassed);
+		
 		if (state == null)
 			return;
 
@@ -285,8 +292,8 @@ public class HunterKillerRenderer
 						unitScaleX = -unitScaleX;
 					}
 
-					String unitImg = getTextureLocation(unit);
-					batch.draw(skin.getRegion(unitImg), dh.drawX, dh.drawY + 4 * scale, // Raise the unit off the base
+					Array<TextureRegion> unitImgs = skin.getRegions(getTextureLocation(unit));
+					batch.draw(unitImgs.get(ticks % unitImgs.size), dh.drawX, dh.drawY + 4 * scale, // Raise the unit off the base
 																						// of the tile slightly, to
 																						// cause a 3D effect
 								dh.originX,
