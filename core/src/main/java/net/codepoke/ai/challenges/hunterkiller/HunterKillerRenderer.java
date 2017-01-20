@@ -131,13 +131,20 @@ public class HunterKillerRenderer
 				// Check if this location should be tinted
 				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
 
+
+				// Get the objects on this tile of the map
+				int mapPosition = map.toPosition(xCoord, flippedY);
+				GameObject[] tile = objects[mapPosition];
+				
 				// Save the original colors, so we can set them back later
 				Color originalColor = batch.getColor();
 				Color originalFontColor = defaultFont.getColor();
 
 				// Change the color if we need to tint this location
 				if (tinted) {
-					batch.setColor(Color.GRAY);
+					// Check if space, them don't tint.
+					if(!(tile[Constants.MAP_INTERNAL_FEATURE_INDEX] instanceof Space))					
+						batch.setColor(Color.GRAY);
 				}
 
 				// Change the font's scale
@@ -145,10 +152,6 @@ public class HunterKillerRenderer
 				float ogFontScaleY = defaultFont.getData().scaleY;
 				defaultFont.getData().scaleX *= scale;
 				defaultFont.getData().scaleY *= scale;
-
-				// Get the objects on this tile of the map
-				int mapPosition = map.toPosition(xCoord, flippedY);
-				GameObject[] tile = objects[mapPosition];
 
 				// Calculate all our drawing coordinates
 				dh.calculateDrawCoordinates(xCoord, yCoord);
