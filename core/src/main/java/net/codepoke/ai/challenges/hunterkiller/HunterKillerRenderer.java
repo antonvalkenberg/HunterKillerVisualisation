@@ -234,7 +234,7 @@ public class HunterKillerRenderer
 
 		// Go through the map a second time to draw the units
 		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
-			for (int yCoord = 0; yCoord < map.getMapHeight(); yCoord++) {
+			for (int yCoord = map.getMapHeight(); yCoord --> 0 ;) {
 				// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
 				int flippedY = (map.getMapHeight() - 1) - yCoord;
 
