@@ -419,11 +419,11 @@ public class HunterKillerRenderer
 			return 0;
 		case SOUTH:
 			// The rotation that is used measures counter-clockwise, which means bottom/SOUTH is at 90 degrees.
-			return 90;
+			return 0;
 		case EAST:
 			return 180;
 		case NORTH:
-			return 270;
+			return 0;
 		default:
 			throw new RuntimeException("Unsupported Direction value " + direction);
 		}
