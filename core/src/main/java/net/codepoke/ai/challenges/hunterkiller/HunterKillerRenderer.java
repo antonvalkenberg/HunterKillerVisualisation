@@ -38,6 +38,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -45,6 +46,9 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class HunterKillerRenderer
 		extends MatchRenderer<HunterKillerState, HunterKillerAction> {
 
+	// Masks used for wall rendering
+	public static final int UP_MASK = 1, RIGHT_MASK = 2, DOWN_MASK = 4, LEFT_MASK = 8;
+	
 	/**
 	 * The original size of our tile-set images.
 	 */
@@ -429,6 +433,32 @@ public class HunterKillerRenderer
 		}
 	}
 
+	/** Returns whether the feature at the given index in the adjacency matrix contains a Wall or Door. */
+	private boolean isWalled(MapFeature[] features, int i){
+		return features[i] != null && (features[i] instanceof Wall || features[i] instanceof Door);
+	}
+	
+	/** Grabs all regions from the skin under the key and samples from them with the current weight. */
+	private TextureRegion sample(String key, double weight){
+		
+		Array<TextureRegion> regions = skin.getRegions(key);
+		
+		if(regions != null){
+			TextureRegion target = null;
+			
+			// Simple stop once we sample on the weight.
+			for (int i = 0; i < regions.size; i++) {
+				target = regions.get(i);
+				if(weight < 1 + i * 0.2f) break;
+			}
+			
+			return target;
+		} else {
+			return skin.getRegion(key);
+		}
+	}
+	
+	
 	/**
 	 * Create a cache of {@link TextureRegion}s, indexed by their position on the {@link Map}. This method currently
 	 * caches the following MapFeature-objects: Wall, Floor, Space.
@@ -445,7 +475,7 @@ public class HunterKillerRenderer
 		GameObject[][] content = map.getMapContent();
 
 		Random r = new Random(4);
-
+		
 		// Traverse the content of the map
 		for (int position = 0; position < content.length; position++) {
 
@@ -456,121 +486,24 @@ public class HunterKillerRenderer
 			MapFeature feature = (MapFeature) content[position][Constants.MAP_INTERNAL_FEATURE_INDEX];
 			// Check if the feature is a Wall
 			if (feature instanceof Wall) {
+				// 1 = Up, 2 == Right, 4 == Down, 8 == Left
+								
+				
 				// Get the features around the wall
 				// We identify these as 9 locations (our wall in the middle), starting top-left and going right->down,
 				// starting from index 0, to 8.
 				MapFeature[] features = map.getMapFeaturesAround(map.toLocation(position));
+				
+				int mask = isWalled(features, 1) ? UP_MASK : 0;
+				mask |= isWalled(features, 5) ? RIGHT_MASK : 0; 
+				mask |= isWalled(features, 7) ? DOWN_MASK : 0;
+				mask |= isWalled(features, 3) ? LEFT_MASK : 0;
 
-				// Make a list of indexes that are Walls
-				IntArray wI = new IntArray();
-				for (int i = 0; i < features.length; i++) {
-					// Check for null value, also: treat Doors as Walls here, since that makes the cleanest look
-					if (features[i] != null && (features[i] instanceof Wall || features[i] instanceof Door))
-						wI.add(i);
-				}
-
-				// There are several situations we are looking for, because this piece of Wall looks different in all:
-				// Note: never need to check index 4, this is already our centre Wall.
-
-				// 16: T-section pointing to the right; 1,4,5,7 are Walls, 3 is non-Wall.
-				if (wI.contains(1) && wI.contains(5) && wI.contains(7) && !wI.contains(3)) {
-					mapCache.put(position, skin.getRegion("map/wall_16"));
-					continue;
-				}
-				// 15: T-section pointing to the left; 1,3,4,7 are Walls, 5 is non-Wall.
-				else if (wI.contains(1) && wI.contains(3) && wI.contains(7) && !wI.contains(5)) {
-					mapCache.put(position, skin.getRegion("map/wall_15"));
-					continue;
-				}
-				// 14: T-section pointing to the top; 1,3,4,5 are Walls, 7 is non-Wall.
-				else if (wI.contains(1) && wI.contains(3) && wI.contains(5) && !wI.contains(7)) {
-					mapCache.put(position, skin.getRegion("map/wall_14"));
-					continue;
-				}
-				// 13: T-section pointing to the bottom; 3,4,5,7 are Walls, 1 is non-Wall.
-				else if (wI.contains(3) && wI.contains(5) && wI.contains(7) && !wI.contains(1)) {
-					mapCache.put(position, skin.getRegion("map/wall_13"));
-					continue;
-				}
-				// 12: Top end of a wall section; 4,7 are Walls, 1,3,5 are non-Wall.
-				else if (wI.contains(7) && !wI.contains(1) && !wI.contains(3) && !wI.contains(5)) {
-					// mapCache.put(position, skin.getRegion("map/wall_12"));
-					mapCache.put(position, skin.getRegion("map/wall_09"));
-					continue;
-				}
-				// 11: Left end of a wall section; 4,5 are Walls, 1,3,7 are non-Wall
-				else if (wI.contains(5) && !wI.contains(1) && !wI.contains(3) && !wI.contains(7)) {
-					// mapCache.put(position, skin.getRegion("map/wall_11"));
-					mapCache.put(position, skin.getRegion("map/wall_10"));
-					continue;
-				}
-				// 10: Right end of a wall section; 3,4 are Walls, 1,5,7 are non-Wall
-				else if (wI.contains(3) && !wI.contains(1) && !wI.contains(5) && !wI.contains(7)) {
-					// mapCache.put(position, skin.getRegion("map/wall_10"));
-					mapCache.put(position, skin.getRegion("map/wall_11"));
-					continue;
-				}
-				// 09: Bottom end of a wall section; 1,4 are Walls, 3,5,7 are non-Wall
-				else if (wI.contains(1) && !wI.contains(3) && !wI.contains(5) && !wI.contains(7)) {
-					// mapCache.put(position, skin.getRegion("map/wall_09"));
-					mapCache.put(position, skin.getRegion("map/wall_12"));
-					continue;
-				}
-				// 08: A cross; 1,3,4,5,7 are Walls
-				else if (wI.contains(1) && wI.contains(3) && wI.contains(5) && wI.contains(7)) {
-					mapCache.put(position, skin.getRegion("map/wall_08"));
-					continue;
-				}
-				// 07: Vertically oriented wall; 1,4,7 are Walls, 3,5 are non-Walls
-				else if (wI.contains(1) && wI.contains(7) && !wI.contains(3) && !wI.contains(5)) {
-					// Grab one of the alternative tiles with some distribution
-					mapCache.put(position, skin.getRegion(weight < 1.2 ? "map/wall_07" : "map/wall_07b"));
-
-					continue;
-				}
-				// 06: Horizontally oriented wall; 3,4,5 are Walls, 1,7 are non-Walls
-				else if (wI.contains(3) && wI.contains(5) && !wI.contains(1) && !wI.contains(7)) {
-					mapCache.put(position, skin.getRegion(weight < 1.2 ? "map/wall_06" : "map/wall_06b"));
-					continue;
-				}
-				// 05: Top-right corner; 3,4,7 are Walls, 1,5 are non-Walls
-				else if (wI.contains(3) && wI.contains(7) && !wI.contains(1) && !wI.contains(5)) {
-					mapCache.put(position, skin.getRegion("map/wall_05"));
-					continue;
-				}
-				// 04: Bottom-left corner; 1,4,5 are Walls, 3,7 are non-Walls
-				else if (wI.contains(1) && wI.contains(5) && !wI.contains(3) && !wI.contains(7)) {
-					mapCache.put(position, skin.getRegion("map/wall_04"));
-					continue;
-				}
-				// 03: Bottom-right corner; 1,3,4 are Walls, 5,7 are non-Walls
-				else if (wI.contains(1) && wI.contains(3) && !wI.contains(5) && !wI.contains(7)) {
-					mapCache.put(position, skin.getRegion("map/wall_03"));
-					continue;
-				}
-				// 02: Top-left corner; 4,5,7 are Walls, 1,3 are non-Walls
-				else if (wI.contains(5) && wI.contains(7) && !wI.contains(1) && !wI.contains(3)) {
-					mapCache.put(position, skin.getRegion("map/wall_02"));
-					continue;
-				}
-				// 01: Pillar (any other situation);
-				else {
-					mapCache.put(position, skin.getRegion("map/wall_01"));
-					continue;
-				}
+				mapCache.put(position, sample("map/wall["+mask+"]", weight));				
 			} else if (feature instanceof Floor) {
-				// Grab one of the alternative tiles with some distribution
-				if (weight < 1.2) {
-					mapCache.put(position, skin.getRegion("map/floor_1"));
-				} else if (weight < 1.4) {
-					mapCache.put(position, skin.getRegion("map/floor_2"));
-				} else if (weight < 1.8) {
-					mapCache.put(position, skin.getRegion("map/floor_3"));
-				} else {
-					mapCache.put(position, skin.getRegion("map/floor_4"));
-				}
+				mapCache.put(position, sample("map/floor", weight));
 			} else if (feature instanceof Space) {
-				mapCache.put(position, skin.getRegion("map/space"));
+				mapCache.put(position, sample("map/space", weight));
 			}
 		}
 	}
