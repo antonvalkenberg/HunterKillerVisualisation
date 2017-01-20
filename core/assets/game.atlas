@@ -34,271 +34,438 @@ fx/melee
   index: -1
 
 game2.png
-size: 1024,32
+size: 128,256
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
 map/base_p1
   rotate: false
-  xy: 1, 1
+  xy: 1, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/base_p2
   rotate: false
-  xy: 26, 1
+  xy: 1, 201
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/base_p3
   rotate: false
-  xy: 51, 1
+  xy: 26, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/base_p4
   rotate: false
-  xy: 76, 1
+  xy: 1, 176
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/door_closed
   rotate: false
-  xy: 101, 1
+  xy: 26, 201
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/door_open
   rotate: false
-  xy: 126, 1
+  xy: 51, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/floor
   rotate: false
-  xy: 151, 1
+  xy: 1, 151
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
 map/floor
   rotate: false
-  xy: 176, 1
+  xy: 26, 176
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
 map/floor
   rotate: false
-  xy: 201, 1
+  xy: 51, 201
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 2
 map/floor
   rotate: false
-  xy: 226, 1
+  xy: 76, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 3
+map/floor
+  rotate: false
+  xy: 1, 126
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 4
+map/floor
+  rotate: false
+  xy: 26, 151
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 5
+map/floor
+  rotate: false
+  xy: 51, 176
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 6
+map/floor
+  rotate: false
+  xy: 76, 201
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 7
 map/space
   rotate: false
-  xy: 251, 1
+  xy: 101, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
 map/space
   rotate: false
-  xy: 276, 1
+  xy: 1, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
 map/space
   rotate: false
-  xy: 301, 1
+  xy: 26, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 2
 map/space
   rotate: false
-  xy: 326, 1
+  xy: 51, 151
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 3
 map/wall[0]
   rotate: false
-  xy: 351, 1
+  xy: 76, 176
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_single
   rotate: false
-  xy: 351, 1
+  xy: 76, 176
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[10]
   rotate: false
-  xy: 376, 1
+  xy: 101, 201
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
 map/wall[10]
   rotate: false
-  xy: 401, 1
+  xy: 1, 76
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
 map/wall[10]
   rotate: false
-  xy: 426, 1
+  xy: 26, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 2
 map/wall[10]
   rotate: false
-  xy: 451, 1
+  xy: 51, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 3
+map/wall[10]
+  rotate: false
+  xy: 76, 151
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 4
+map/wall[10]
+  rotate: false
+  xy: 101, 176
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 5
 map/wall[11]
   rotate: false
-  xy: 476, 1
+  xy: 1, 51
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[12]
   rotate: false
-  xy: 501, 1
+  xy: 26, 76
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[13]
   rotate: false
-  xy: 526, 1
+  xy: 51, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[14]
   rotate: false
-  xy: 551, 1
+  xy: 76, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[15]
   rotate: false
-  xy: 576, 1
+  xy: 101, 151
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[1]
   rotate: false
-  xy: 601, 1
+  xy: 1, 26
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[2]
   rotate: false
-  xy: 626, 1
+  xy: 26, 51
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[3]
   rotate: false
-  xy: 651, 1
+  xy: 51, 76
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[4]
   rotate: false
-  xy: 676, 1
+  xy: 76, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[5]
   rotate: false
-  xy: 701, 1
+  xy: 101, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
 map/wall[5]
   rotate: false
-  xy: 726, 1
+  xy: 1, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
 map/wall[5]
   rotate: false
-  xy: 751, 1
+  xy: 26, 26
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 2
 map/wall[5]
   rotate: false
-  xy: 776, 1
+  xy: 51, 51
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 3
 map/wall[6]
   rotate: false
-  xy: 801, 1
+  xy: 76, 76
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[7]
   rotate: false
-  xy: 826, 1
+  xy: 101, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[8]
   rotate: false
-  xy: 851, 1
+  xy: 26, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[9]
   rotate: false
-  xy: 876, 1
+  xy: 51, 26
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 
 game3.png
+size: 512,32
+format: RGBA8888
+filter: MipMapNearestNearest,MipMapNearestNearest
+repeat: none
+map/decals/cobweb[12]
+  rotate: false
+  xy: 1, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/decals/cobweb[3]
+  rotate: false
+  xy: 26, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/decals/cobweb[6]
+  rotate: false
+  xy: 51, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/decals/cobweb[9]
+  rotate: false
+  xy: 76, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+map/decals/oryx_16bit_scifi_world
+  rotate: false
+  xy: 101, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 220
+map/decals/oryx_16bit_scifi_world
+  rotate: false
+  xy: 126, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 221
+map/decals/oryx_16bit_scifi_world
+  rotate: false
+  xy: 151, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 222
+map/decals/oryx_16bit_scifi_world
+  rotate: false
+  xy: 176, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 223
+map/decals/oryx_16bit_scifi_world
+  rotate: false
+  xy: 201, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 224
+map/decals/oryx_16bit_scifi_world
+  rotate: false
+  xy: 226, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 225
+map/decals/skulls
+  rotate: false
+  xy: 251, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+map/decals/skulls
+  rotate: false
+  xy: 276, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 2
+map/decals/skulls
+  rotate: false
+  xy: 301, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 3
+map/decals/skulls
+  rotate: false
+  xy: 326, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 4
+map/decals/skulls
+  rotate: false
+  xy: 351, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 5
+map/decals/skulls
+  rotate: false
+  xy: 376, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 6
+map/decals/wall_shadow
+  rotate: false
+  xy: 401, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+
+game4.png
 size: 256,128
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
@@ -472,7 +639,7 @@ ui/panel_btn_white
   offset: 0, 0
   index: -1
 
-game4.png
+game5.png
 size: 256,32
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
@@ -583,7 +750,7 @@ ui/bars/bar_right
   offset: 0, 0
   index: 4
 
-game5.png
+game6.png
 size: 64,32
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
@@ -603,7 +770,7 @@ ui/btns/btn_up
   offset: 0, 0
   index: -1
 
-game6.png
+game7.png
 size: 128,64
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
@@ -735,7 +902,7 @@ ui/controls/start_over
   offset: 0, 0
   index: -1
 
-game7.png
+game8.png
 size: 1024,32
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
