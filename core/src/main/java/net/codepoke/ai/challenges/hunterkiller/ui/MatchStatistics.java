@@ -100,7 +100,7 @@ public class MatchStatistics
 
 			for (int i = 0; i < playerNames.length; i++) {
 				Label lbl = new Label("", skin);
-				Image img = new Image(skin.getRegion(PLAYER_TAG + (i + 1)));
+				Image img = new Image(skin.getRegion(PLAYER_TAG + (i + 1) + "_0"));
 				img.setScaling(Scaling.none);
 
 				scoreAndNames.add(lbl);

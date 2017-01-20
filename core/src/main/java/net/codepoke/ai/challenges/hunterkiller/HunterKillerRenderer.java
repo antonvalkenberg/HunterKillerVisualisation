@@ -13,14 +13,15 @@ import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.MapLocation;
 import net.codepoke.ai.challenge.hunterkiller.enums.Direction;
+import net.codepoke.ai.challenge.hunterkiller.enums.StructureType;
 import net.codepoke.ai.challenge.hunterkiller.enums.UnitOrderType;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.Controlled;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.GameObject;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Door;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Floor;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.MapFeature;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Space;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Structure;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Wall;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Infected;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Medic;
@@ -88,13 +89,13 @@ public class HunterKillerRenderer
 		defaultFont = skin.getFont("kenny-8outlined-font");
 		controlledTextures = new ObjectMap<Class, String[]>();
 
-		controlledTextures.put(Base.class, new String[4]);
+		controlledTextures.put(Structure.class, new String[4]);
 		controlledTextures.put(Infected.class, new String[4]);
 		controlledTextures.put(Medic.class, new String[4]);
 		controlledTextures.put(Soldier.class, new String[4]);
 
 		for (int i = 1; i <= 4; i++) {
-			controlledTextures.get(Base.class)[i - 1] = "map/base_p" + i;
+			controlledTextures.get(Structure.class)[i - 1] = "map/base_p" + i;
 			controlledTextures.get(Infected.class)[i - 1] = "units/infected_p" + i;
 			controlledTextures.get(Medic.class)[i - 1] = "units/medic_p" + i;
 			controlledTextures.get(Soldier.class)[i - 1] = "units/soldier_p" + i;
@@ -178,20 +179,42 @@ public class HunterKillerRenderer
 					}
 				}
 
-				else if (object instanceof Base) {
-					// Draw a different color based on team
-					Base base = (Base) object;
-					String baseImg = getTextureLocation(base);
-					batch.draw(skin.getRegion(baseImg), dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);
+				else if (object instanceof Structure) {
+					// Check if this structure is being controlled by a player
+					Structure structure = (Structure) object;
+					if (structure.getControllingPlayerID() == Constants.STRUCTURE_NO_CONTROL) {
+						String textureLocation = "map/base_p5_" + getStructureTypeIndex(structure.getType());
+						batch.draw(skin.getRegion(textureLocation), dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);
+					} else {
+						// Draw a different color based on team
+						String structureImg = getTextureLocation(structure);
 
-					// Draw the player's resource amount
-					int resource = state.getPlayer(base.getControllingPlayerID())
-										.getResource();
-					defaultFont.setColor(Color.CYAN);
-					defaultFont.draw(batch, "" + resource, dh.drawXBaseHP, dh.drawYBaseHP);
+						batch.draw(	skin.getRegions(structureImg)
+										.get(getStructureTypeIndex(structure.getType())),
+									dh.drawX,
+									dh.drawY,
+									dh.tileWidth * dh.scaleX,
+									dh.tileHeight * dh.scaleY);
 
-					// Draw the base's health
-					int health = base.getHpCurrent();
+						if (structure.getType() == StructureType.Base) {
+							// Draw the player's resource amount
+							int resource = state.getPlayer(structure.getControllingPlayerID())
+												.getResource();
+							defaultFont.setColor(Color.CYAN);
+							defaultFont.draw(batch, "" + resource, dh.drawXBaseHP, dh.drawYBaseHP);
+
+						}
+
+						// Draw a Structure's controller-ID if CTRL is pressed
+						if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT)) {
+							int controllerID = structure.getControllingPlayerID();
+							defaultFont.setColor(Color.GREEN);
+							defaultFont.draw(batch, "" + controllerID, dh.drawXBaseHP, dh.drawYBaseHP);
+						}
+					}
+
+					// Draw the structure's health
+					int health = structure.getHpCurrent();
 					defaultFont.setColor(Color.RED);
 					defaultFont.draw(batch, "" + health, dh.drawXUnitHP, dh.drawYUnitHP);
 
@@ -415,7 +438,10 @@ public class HunterKillerRenderer
 	 * player)
 	 */
 	private String getTextureLocation(Controlled target) {
-		return controlledTextures.get(target.getClass())[target.getControllingPlayerID()];
+		if (target.getControllingPlayerID() != Constants.STRUCTURE_NO_CONTROL)
+			return controlledTextures.get(target.getClass())[target.getControllingPlayerID()];
+		else
+			throw new RuntimeException("Error: cannot get the texture location of an uncontrolled object");
 	}
 
 	/**
@@ -548,6 +574,27 @@ public class HunterKillerRenderer
 		}
 	}
 
+	/**
+	 * Returns the index where a specific {@link StructureType} is located within a player's collection of base-textures
+	 * 
+	 * @param type
+	 *            The type of the structure
+	 */
+	public int getStructureTypeIndex(StructureType type) {
+		switch (type) {
+		case Base:
+			return 0;
+		case Objective:
+			return 3;
+		case Outpost:
+			return 1;
+		case Stronghold:
+			return 2;
+		default:
+			throw new RuntimeException("Error: Unsupported StructureType (" + type + ")");
+		}
+	}
+
 	@Override
 	public float getPrefWidth() {
 		return (state != null ? state.getMap()
@@ -628,19 +675,19 @@ public class HunterKillerRenderer
 		 */
 		public float drawYUnitCD;
 		/**
-		 * The X-coordinate from where libgdx should start drawing the Base-HP text.
+		 * The X-coordinate from where libgdx should start drawing the Structure-HP text.
 		 */
 		public float drawXBaseHP;
 		/**
-		 * The Y-coordinate from where libgdx should start drawing the Base-HP text.
+		 * The Y-coordinate from where libgdx should start drawing the Structure-HP text.
 		 */
 		public float drawYBaseHP;
 		/**
-		 * The X-coordinate from where libgdx should start drawing the Base-Resource text.
+		 * The X-coordinate from where libgdx should start drawing the Structure-Resource text.
 		 */
 		public float drawXBaseRes;
 		/**
-		 * The Y-coordinate from where libgdx should start drawing the Base-Resource text.
+		 * The Y-coordinate from where libgdx should start drawing the Structure-Resource text.
 		 */
 		public float drawYBaseRes;
 

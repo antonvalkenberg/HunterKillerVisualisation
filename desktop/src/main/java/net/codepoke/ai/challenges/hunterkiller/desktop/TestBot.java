@@ -10,10 +10,10 @@ import net.codepoke.ai.challenge.hunterkiller.MoveGenerator;
 import net.codepoke.ai.challenge.hunterkiller.Player;
 import net.codepoke.ai.challenge.hunterkiller.enums.UnitOrderType;
 import net.codepoke.ai.challenge.hunterkiller.enums.UnitType;
-import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Base;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.MapFeature;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Structure;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Unit;
-import net.codepoke.ai.challenge.hunterkiller.orders.BaseOrder;
+import net.codepoke.ai.challenge.hunterkiller.orders.StructureOrder;
 import net.codepoke.ai.challenge.hunterkiller.orders.UnitOrder;
 import net.codepoke.ai.network.AIBot;
 
@@ -22,7 +22,7 @@ public class TestBot
 
 	private static Random r = new Random();
 	private static final double noUnitOrderThreshold = 0.2;
-	private static final double noBaseOrderThreshold = 0.3;
+	private static final double noBaseOrderThreshold = 0.1;
 
 	public TestBot() {
 		// TODO Create new BotUID for HunterKiller test bot
@@ -34,11 +34,13 @@ public class TestBot
 		HunterKillerAction random = new HunterKillerAction(state);
 		Player player = state.getPlayer(state.getCurrentPlayer());
 
-		// Check if the base exists and we want to order the base to do something
-		if (player.isBaseExists() && r.nextDouble() >= noBaseOrderThreshold) {
-			// Get all legal orders for this base
-			List<BaseOrder> legalOrders = MoveGenerator.getAllLegalOrders(state, (Base) state.getMap()
-																								.getObject(player.getBaseID()));
+		// Move through all structure
+		for (Structure structure : player.getStructures(state.getMap())) {
+			if (r.nextDouble() <= noBaseOrderThreshold)
+				continue;
+
+			// Get all legal orders for this structure
+			List<StructureOrder> legalOrders = MoveGenerator.getAllLegalOrders(state, structure);
 
 			// Add a random order
 			if (!legalOrders.isEmpty()) {
@@ -65,13 +67,13 @@ public class TestBot
 			legalAttackOrders.removeIf((order) -> {
 				Unit target = map.getUnitAtLocation(order.getTargetLocation());
 				MapFeature feature = map.getFeatureAtLocation(order.getTargetLocation());
-				return target == null && !(feature instanceof Base);
+				return target == null && !(feature instanceof Structure);
 			});
 
 			// Remove all attack with an ally base as target
 			legalAttackOrders.removeIf(order -> {
 				MapFeature feature = map.getFeatureAtLocation(order.getTargetLocation());
-				return feature instanceof Base && ((Base) feature).getControllingPlayerID() == unit.getControllingPlayerID();
+				return feature instanceof Structure && ((Structure) feature).getControllingPlayerID() == unit.getControllingPlayerID();
 			});
 
 			// Remove all attacks with an ally unit as target, unless the order is a Medic's special attack
