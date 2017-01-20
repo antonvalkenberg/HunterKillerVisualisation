@@ -736,7 +736,7 @@ ui/controls/start_over
   index: -1
 
 game7.png
-size: 512,32
+size: 1024,32
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
@@ -747,135 +747,163 @@ units/infected_p1
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/infected_p2
+units/infected_p1
   rotate: false
   xy: 26, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 0
-units/infected_p3
+  index: 1
+units/infected_p2
   rotate: false
   xy: 51, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/infected_p4
+units/infected_p2
   rotate: false
   xy: 76, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 0
-units/medic_p1
+  index: 1
+units/infected_p3
   rotate: false
   xy: 101, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/medic_p1
+units/infected_p3
   rotate: false
   xy: 126, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
-units/medic_p2
+units/infected_p4
   rotate: false
   xy: 151, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/medic_p2
+units/infected_p4
   rotate: false
   xy: 176, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
-units/medic_p3
+units/medic_p1
   rotate: false
   xy: 201, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/medic_p3
+units/medic_p1
   rotate: false
   xy: 226, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
-units/medic_p4
+units/medic_p2
   rotate: false
   xy: 251, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/medic_p4
+units/medic_p2
   rotate: false
   xy: 276, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
-units/soldier_p1
+units/medic_p3
   rotate: false
   xy: 301, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/soldier_p1
+units/medic_p3
   rotate: false
   xy: 326, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
-units/soldier_p2
+units/medic_p4
   rotate: false
   xy: 351, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/soldier_p2
+units/medic_p4
   rotate: false
   xy: 376, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
-units/soldier_p3
+units/soldier_p1
   rotate: false
   xy: 401, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/soldier_p3
+units/soldier_p1
   rotate: false
   xy: 426, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 1
-units/soldier_p4
+units/soldier_p2
   rotate: false
   xy: 451, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-units/soldier_p4
+units/soldier_p2
   rotate: false
   xy: 476, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+units/soldier_p3
+  rotate: false
+  xy: 501, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+units/soldier_p3
+  rotate: false
+  xy: 526, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+units/soldier_p4
+  rotate: false
+  xy: 551, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+units/soldier_p4
+  rotate: false
+  xy: 576, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
