@@ -295,8 +295,10 @@ public class HunterKillerRenderer
 
 					// Draw the unit's HP and cooldown
 					int hp = unit.getHpCurrent();
-					defaultFont.setColor(Color.RED);
-					defaultFont.draw(batch, "" + hp, dh.drawXUnitHP, dh.drawYUnitHP);
+					if(hp < unit.getHpMax()){
+						defaultFont.setColor(Color.RED);
+						defaultFont.draw(batch, "" + hp, dh.drawXUnitHP, dh.drawYUnitHP);
+					}
 
 					int cd = unit.getSpecialAttackCooldown();
 					// Only draw the cooldown if it's on (>0)
