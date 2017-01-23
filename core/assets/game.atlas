@@ -44,297 +44,402 @@ map/base_p1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 0
+map/base_p1
+  rotate: false
+  xy: 1, 201
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
 map/base_p2
   rotate: false
   xy: 1, 201
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 1
+map/base_p3
+  rotate: false
+  xy: 1, 201
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+map/base_p4
+  rotate: false
+  xy: 1, 201
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+map/base_p5
+  rotate: false
+  xy: 1, 201
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+map/base_p1
+  rotate: false
+  xy: 26, 226
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 2
+map/base_p2
+  rotate: false
+  xy: 26, 226
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 2
 map/base_p3
   rotate: false
   xy: 26, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 2
+map/base_p4
+  rotate: false
+  xy: 26, 226
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 2
+map/base_p5
+  rotate: false
+  xy: 26, 226
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 2
+map/base_p1
+  rotate: false
+  xy: 1, 176
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 3
+map/base_p2
+  rotate: false
+  xy: 1, 176
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 3
+map/base_p3
+  rotate: false
+  xy: 1, 176
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 3
 map/base_p4
   rotate: false
   xy: 1, 176
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/door_closed
+  index: 3
+map/base_p5
+  rotate: false
+  xy: 1, 176
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 3
+map/base_p2
   rotate: false
   xy: 26, 201
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/door_open
+  index: 0
+map/base_p3
   rotate: false
   xy: 51, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/floor
+  index: 0
+map/base_p4
   rotate: false
   xy: 1, 151
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: 0
-map/floor
+map/door_closed
   rotate: false
   xy: 26, 176
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 1
-map/floor
+  index: -1
+map/door_open
   rotate: false
   xy: 51, 201
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 2
+  index: -1
 map/floor
   rotate: false
   xy: 76, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 3
+  index: 0
 map/floor
   rotate: false
   xy: 1, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 4
+  index: 1
 map/floor
   rotate: false
   xy: 26, 151
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 5
+  index: 2
 map/floor
   rotate: false
   xy: 51, 176
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 6
+  index: 3
 map/floor
   rotate: false
   xy: 76, 201
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 7
-map/space
+  index: 4
+map/floor
   rotate: false
   xy: 101, 226
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 0
-map/space
+  index: 5
+map/floor
   rotate: false
   xy: 1, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 1
-map/space
+  index: 6
+map/floor
   rotate: false
   xy: 26, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 2
+  index: 7
 map/space
   rotate: false
   xy: 51, 151
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
+  index: 0
+map/space
+  rotate: false
+  xy: 76, 176
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+map/space
+  rotate: false
+  xy: 101, 201
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 2
+map/space
+  rotate: false
+  xy: 1, 76
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
   index: 3
 map/wall[0]
   rotate: false
-  xy: 76, 176
+  xy: 26, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall_single
   rotate: false
-  xy: 76, 176
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-map/wall[10]
-  rotate: false
-  xy: 101, 201
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: 0
-map/wall[10]
-  rotate: false
-  xy: 1, 76
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: 1
-map/wall[10]
-  rotate: false
   xy: 26, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 2
+  index: -1
 map/wall[10]
   rotate: false
   xy: 51, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 3
+  index: 0
 map/wall[10]
   rotate: false
   xy: 76, 151
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 4
+  index: 1
 map/wall[10]
   rotate: false
   xy: 101, 176
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 5
-map/wall[11]
+  index: 2
+map/wall[10]
   rotate: false
   xy: 1, 51
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[12]
+  index: 3
+map/wall[10]
   rotate: false
   xy: 26, 76
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[13]
+  index: 4
+map/wall[10]
   rotate: false
   xy: 51, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[14]
+  index: 5
+map/wall[11]
   rotate: false
   xy: 76, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall[15]
+map/wall[12]
   rotate: false
   xy: 101, 151
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall[1]
+map/wall[13]
   rotate: false
   xy: 1, 26
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall[2]
+map/wall[14]
   rotate: false
   xy: 26, 51
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall[3]
+map/wall[15]
   rotate: false
   xy: 51, 76
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall[4]
+map/wall[1]
   rotate: false
   xy: 76, 101
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall[5]
+map/wall[2]
   rotate: false
   xy: 101, 126
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 0
-map/wall[5]
+  index: -1
+map/wall[3]
   rotate: false
   xy: 1, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 1
-map/wall[5]
+  index: -1
+map/wall[4]
   rotate: false
   xy: 26, 26
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 2
+  index: -1
 map/wall[5]
   rotate: false
   xy: 51, 51
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
+  index: 0
+map/wall[5]
+  rotate: false
+  xy: 76, 76
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 1
+map/wall[5]
+  rotate: false
+  xy: 101, 101
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 2
+map/wall[5]
+  rotate: false
+  xy: 26, 1
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
   index: 3
 map/wall[6]
   rotate: false
-  xy: 76, 76
+  xy: 51, 26
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[7]
   rotate: false
-  xy: 101, 101
+  xy: 76, 51
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[8]
   rotate: false
-  xy: 26, 1
+  xy: 101, 76
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 map/wall[9]
   rotate: false
-  xy: 51, 26
+  xy: 51, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
