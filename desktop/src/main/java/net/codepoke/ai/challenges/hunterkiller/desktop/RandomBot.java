@@ -17,16 +17,21 @@ import net.codepoke.ai.challenge.hunterkiller.orders.StructureOrder;
 import net.codepoke.ai.challenge.hunterkiller.orders.UnitOrder;
 import net.codepoke.ai.network.AIBot;
 
-public class TestBot
+/**
+ * Represents an {@link AIBot} for the HunterKiller game that generates random orders for it's structures and units.
+ * 
+ * @author Anton Valkenberg (anton.valkenberg@gmail.com)
+ *
+ */
+public class RandomBot
 		extends AIBot<HunterKillerState, HunterKillerAction> {
 
 	private static Random r = new Random();
 	private static final double noUnitOrderThreshold = 0.2;
 	private static final double noBaseOrderThreshold = 0.1;
 
-	public TestBot() {
-		// TODO Create new BotUID for HunterKiller test bot
-		super("dpeo9nqfhvchpg3tf1m49ss1hd", HunterKillerState.class, HunterKillerAction.class);
+	public RandomBot() {
+		super("", HunterKillerState.class, HunterKillerAction.class);
 	}
 
 	public HunterKillerAction handle(HunterKillerState state) {

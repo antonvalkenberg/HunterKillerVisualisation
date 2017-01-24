@@ -118,7 +118,7 @@ public class DesktopLauncher {
 
 				HunterKillerState orgState = state.copy();
 
-				TestBot bot = new TestBot(); // Instantiate your bot here
+				RandomBot bot = new RandomBot(); // Instantiate your bot here
 
 				Json json = new Json();
 
