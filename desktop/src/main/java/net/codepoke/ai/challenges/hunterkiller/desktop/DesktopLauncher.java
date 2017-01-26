@@ -118,7 +118,7 @@ public class DesktopLauncher {
 
 				HunterKillerState orgState = state.copy();
 
-				RandomBot bot = new RandomBot(); // Instantiate your bot here
+				RandomBot randomBot = new RandomBot(); // Instantiate your bot here
 
 				Json json = new Json();
 
@@ -131,7 +131,8 @@ public class DesktopLauncher {
 				// State.getCurrentPlayer().
 				Result result;
 				do {
-					HunterKillerAction action = bot.handle(state);
+					HunterKillerAction action = randomBot.handle(state);
+
 					actions.add(action);
 					// Alternatively, send the action immediately: listener.parseMessage(vis.getLastState(),
 					// json.toJson(action));

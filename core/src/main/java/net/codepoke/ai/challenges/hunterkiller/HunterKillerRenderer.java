@@ -40,7 +40,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 
@@ -49,7 +48,7 @@ public class HunterKillerRenderer
 
 	// Masks used for wall rendering
 	public static final int UP_MASK = 1, RIGHT_MASK = 2, DOWN_MASK = 4, LEFT_MASK = 8;
-	
+
 	/**
 	 * The original size of our tile-set images.
 	 */
@@ -79,8 +78,13 @@ public class HunterKillerRenderer
 
 	/** Cache of Type to a list texture names (indexed on player ID) for Controlled */
 	private ObjectMap<Class, String[]> controlledTextures;
-	
-	/** A counter used to draw a different frame every 1s. Resets on arbitrary 1000.*/
+
+	/**
+	 * A representation of values for each tile on the map.
+	 */
+	private Color[][] valueMap = null;;
+
+	/** A counter used to draw a different frame every 1s. Resets on arbitrary 1000. */
 	private int ticks = 0;
 	private float timePassed;
 
@@ -106,15 +110,15 @@ public class HunterKillerRenderer
 	public void onDraw(Batch batch, float parentAlpha) {
 
 		timePassed = (timePassed + Gdx.graphics.getDeltaTime() % 1000);
-		ticks = (int)Math.floor(timePassed);
-		
+		ticks = (int) Math.floor(timePassed);
+
 		if (state == null)
 			return;
 
 		// Initialize the cache
-		//if (mapCache == null) {
+		if (mapCache == null) {
 			createMapCache(state);
-		//}
+		}
 
 		// WARNING: Null on initial state!
 		HunterKillerAction action = getAction();
@@ -147,7 +151,7 @@ public class HunterKillerRenderer
 				// Get the objects on this tile of the map
 				int mapPosition = map.toPosition(xCoord, flippedY);
 				GameObject[] tile = objects[mapPosition];
-				
+
 				// Save the original colors, so we can set them back later
 				Color originalColor = batch.getColor();
 				Color originalFontColor = defaultFont.getColor();
@@ -155,7 +159,7 @@ public class HunterKillerRenderer
 				// Change the color if we need to tint this location
 				if (tinted) {
 					// Check if space, them don't tint.
-					if(!(tile[Constants.MAP_INTERNAL_FEATURE_INDEX] instanceof Space))					
+					if (!(tile[Constants.MAP_INTERNAL_FEATURE_INDEX] instanceof Space))
 						batch.setColor(Color.GRAY);
 				}
 
@@ -175,7 +179,7 @@ public class HunterKillerRenderer
 				// Check if this position has been cached
 				if (mapCache.containsKey(mapPosition)) {
 					for (TextureRegion region : mapCache.get(mapPosition)) {
-						batch.draw(region, dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);						
+						batch.draw(region, dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);
 					}
 				}
 
@@ -270,14 +274,14 @@ public class HunterKillerRenderer
 
 		// Go through the map a second time to draw the units
 		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
-			for (int yCoord = map.getMapHeight(); yCoord --> 0 ;) {
+			for (int yCoord = map.getMapHeight(); yCoord-- > 0;) {
 				// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
 				int flippedY = (map.getMapHeight() - 1) - yCoord;
 
 				// Check if this location should be tinted
 				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
 				tinted &= !Gdx.input.isKeyPressed(Keys.ALT_LEFT);
-				
+
 				// Save the original colors, so we can set them back later
 				Color originalColor = batch.getColor();
 				Color originalFontColor = defaultFont.getColor();
@@ -318,9 +322,10 @@ public class HunterKillerRenderer
 					}
 
 					Array<TextureRegion> unitImgs = skin.getRegions(getTextureLocation(unit));
-					batch.draw(unitImgs.get(ticks % unitImgs.size), dh.drawX, dh.drawY + 4 * scale, // Raise the unit off the base
-																						// of the tile slightly, to
-																						// cause a 3D effect
+					batch.draw(unitImgs.get(ticks % unitImgs.size), dh.drawX, dh.drawY + 4 * scale, // Raise the unit
+																									// off the base
+								// of the tile slightly, to
+								// cause a 3D effect
 								dh.originX,
 								dh.originY,
 								dh.tileWidth,
@@ -331,7 +336,7 @@ public class HunterKillerRenderer
 
 					// Draw the unit's HP and cooldown
 					int hp = unit.getHpCurrent();
-					if(hp < unit.getHpMax()){
+					if (hp < unit.getHpMax()) {
 						defaultFont.setColor(Color.RED);
 						defaultFont.draw(batch, "" + hp, dh.drawXUnitHP, dh.drawYUnitHP);
 					}
@@ -431,6 +436,34 @@ public class HunterKillerRenderer
 			// Reset the correct color
 			batch.setColor(originalColor);
 		}
+
+		// Check if the value map needs to be rendered
+		if (valueMap != null && Gdx.input.isKeyPressed(Keys.GRAVE)) {
+
+			// Go through the map to draw the map features first
+			for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
+				for (int yCoord = 0; yCoord < map.getMapHeight(); yCoord++) {
+					// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
+					int flippedY = (map.getMapHeight() - 1) - yCoord;
+
+					// Calculate all our drawing coordinates
+					dh.calculateDrawCoordinates(xCoord, yCoord);
+
+					// Save the color of the batch, so we can set it back later
+					Color originalColor = batch.getColor();
+
+					// Get the value for this location
+					Color value = valueMap[xCoord][flippedY];
+
+					// Paint the square a certain color
+					batch.setColor(value);
+					batch.draw(skin.getRegion("map/value"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+
+					// Reset the correct color
+					batch.setColor(originalColor);
+				}
+			}
+		}
 	}
 
 	/**
@@ -458,42 +491,42 @@ public class HunterKillerRenderer
 			return 0;
 		case SOUTH:
 			// The rotation that is used measures counter-clockwise, which means bottom/SOUTH is at 90 degrees.
-			return 0;
+			return 90;
 		case EAST:
 			return 180;
 		case NORTH:
-			return 0;
+			return 270;
 		default:
 			throw new RuntimeException("Unsupported Direction value " + direction);
 		}
 	}
 
 	/** Returns whether the feature at the given index in the adjacency matrix contains a Wall or Door. */
-	private boolean isWalled(MapFeature[] features, int i){
+	private boolean isWalled(MapFeature[] features, int i) {
 		return features[i] != null && (features[i] instanceof Wall || features[i] instanceof Door);
 	}
-	
+
 	/** Grabs all regions from the skin under the key and samples from them with the current weight. */
-	private TextureRegion sample(String key, double weight){
-		
+	private TextureRegion sample(String key, double weight) {
+
 		Array<TextureRegion> regions = skin.getRegions(key);
-		
-		if(regions != null){
+
+		if (regions != null) {
 			TextureRegion target = null;
-			
+
 			// Simple stop once we sample on the weight.
 			for (int i = 0; i < regions.size; i++) {
 				target = regions.get(i);
-				if(weight < 1 + i * 0.2f) break;
+				if (weight < 1 + i * 0.2f)
+					break;
 			}
-			
+
 			return target;
 		} else {
 			return skin.getRegion(key);
 		}
 	}
-	
-	
+
 	/**
 	 * Create a cache of {@link TextureRegion}s, indexed by their position on the {@link Map}. This method currently
 	 * caches the following MapFeature-objects: Wall, Floor, Space.
@@ -511,7 +544,7 @@ public class HunterKillerRenderer
 
 		Random r = new Random(4);
 		Array<TextureRegion> cell = new Array<TextureRegion>();
-		
+
 		// Traverse the content of the map
 		for (int position = 0; position < content.length; position++) {
 
@@ -523,51 +556,50 @@ public class HunterKillerRenderer
 			// Check if the feature is a Wall
 			if (feature instanceof Wall) {
 				// 1 = Up, 2 == Right, 4 == Down, 8 == Left
-								
-				
+
 				// Get the features around the wall
 				// We identify these as 9 locations (our wall in the middle), starting top-left and going right->down,
 				// starting from index 0, to 8.
 				MapFeature[] features = map.getMapFeaturesAround(map.toLocation(position));
-				
+
 				int wallMask = isWalled(features, 1) ? UP_MASK : 0;
-				wallMask |= isWalled(features, 5) ? RIGHT_MASK : 0; 
+				wallMask |= isWalled(features, 5) ? RIGHT_MASK : 0;
 				wallMask |= isWalled(features, 7) ? DOWN_MASK : 0;
 				wallMask |= isWalled(features, 3) ? LEFT_MASK : 0;
 
-				cell.add(sample("map/wall["+wallMask+"]", weight));			
+				cell.add(sample("map/wall[" + wallMask + "]", weight));
 			} else if (feature instanceof Floor) {
 				// Add floor
 				cell.add(sample("map/floor", weight));
-				
+
 				// Add shadow for walls, and random cobwebs
 				MapFeature[] features = map.getMapFeaturesAround(map.toLocation(position));
-				
+
 				int wallMask = isWalled(features, 1) ? UP_MASK : 0;
-				wallMask |= isWalled(features, 5) ? RIGHT_MASK : 0; 
+				wallMask |= isWalled(features, 5) ? RIGHT_MASK : 0;
 				wallMask |= isWalled(features, 7) ? DOWN_MASK : 0;
 				wallMask |= isWalled(features, 3) ? LEFT_MASK : 0;
-				
-				if((wallMask & UP_MASK) != 0){
+
+				if ((wallMask & UP_MASK) != 0) {
 					// Draw shadow
 					cell.add(skin.getRegion("map/decals/wall_shadow"));
 				}
-				
+
 				// Draw cobwebs only for some arbitrary weight
-				if(weight > 1.3f){
-					String key = "map/decals/cobweb["+wallMask+"]";
-					if(skin.has(key, TextureRegion.class)){
+				if (weight > 1.3f) {
+					String key = "map/decals/cobweb[" + wallMask + "]";
+					if (skin.has(key, TextureRegion.class)) {
 						cell.add(skin.getRegion(key));
 					}
 				}
-				
+
 			} else if (feature instanceof Space) {
 				cell.add(sample("map/space", weight));
 			}
-			
+
 			// If we added anything, add it to the cache.
 			// (We don't realloc for every position as we might not need to draw on each tile.)
-			if(cell.size > 0){
+			if (cell.size > 0) {
 				mapCache.put(position, new Array<TextureRegion>(cell));
 				cell.clear();
 			}
@@ -593,6 +625,16 @@ public class HunterKillerRenderer
 		default:
 			throw new RuntimeException("Error: Unsupported StructureType (" + type + ")");
 		}
+	}
+
+	/**
+	 * Sets the array of colors representing values of a layer that can be painted over the normal rendering.
+	 * 
+	 * @param map
+	 *            The two-dimensional array of Color, representing the values of the layer.
+	 */
+	public void setValueMap(Color[][] map) {
+		valueMap = map;
 	}
 
 	@Override
