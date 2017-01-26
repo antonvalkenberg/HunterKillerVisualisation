@@ -2,6 +2,7 @@ package net.codepoke.ai.challenges.hunterkiller.desktop;
 
 import static net.codepoke.ai.challenges.hunterkiller.desktop.StreamExtensions.stream;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -16,6 +17,7 @@ import net.codepoke.ai.challenge.hunterkiller.MoveGenerator;
 import net.codepoke.ai.challenge.hunterkiller.Player;
 import net.codepoke.ai.challenge.hunterkiller.enums.Direction;
 import net.codepoke.ai.challenge.hunterkiller.enums.UnitType;
+import net.codepoke.ai.challenge.hunterkiller.gameobjects.GameObject;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Structure;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.mapfeature.Wall;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Medic;
@@ -27,6 +29,8 @@ import net.codepoke.ai.challenge.hunterkiller.orders.UnitOrder;
 import net.codepoke.ai.network.AIBot;
 import one.util.streamex.StreamEx;
 
+import com.badlogic.gdx.utils.Array;
+
 /**
  * Represents an {@link AIBot} for the HunterKiller game that generates orders for it's structures and units by
  * following a simple rules-hierarchy.
@@ -37,9 +41,11 @@ import one.util.streamex.StreamEx;
 public class RulesBot
 		extends AIBot<HunterKillerState, HunterKillerAction> {
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG_ImPossible = false;
+	private static final boolean DEBUG_Fails = true;
 	private static final Random r = new Random();
 	HunterKillerRules rulesEngine = new HunterKillerRules();
+	Array<Array<MapLocation>> unitPaths = new Array<Array<MapLocation>>(true, 5);
 
 	public RulesBot() {
 		super("", HunterKillerState.class, HunterKillerAction.class);
@@ -125,28 +131,52 @@ public class RulesBot
 			// If we are a Medic and can use our heal ability
 			if (unit instanceof Medic && unit.canUseSpecialAttack()) {
 				// Check if there are any ally units within range and field-of-view that are damaged
-				List<Unit> friendlyDamagedInRange = units.stream()
-															.filter(i -> unit.isWithinAttackRange(i.getLocation())
-																			&& unit.getFieldOfView()
-																					.contains(i.getLocation()) && i.isDamaged())
+				List<Unit> friendlyDamagedInRange = StreamEx.of(units)
+															.filter(i -> unit.isWithinAttackRange(i.getLocation()) && i.isDamaged())
+															.sortedByInt(i -> MapLocation.getManhattanDist(	unit.getLocation(),
+																											i.getLocation()))
 															.collect(Collectors.toList());
 				if (!friendlyDamagedInRange.isEmpty()) {
-					// Create an order to heal the first unit in the list
-					UnitOrder order = unit.attack(friendlyDamagedInRange.get(0), map, true);
-					// Add the order if it's possible
-					if (addOrderIfPossible(rulesAction, orderCounter, copyState, order, possibleCheckFails, orderFailures)) {
-						// Don't create another order for this unit
-						continue;
+					Unit damagedAlly = friendlyDamagedInRange.get(0);
+
+					// Check if we can currently see the ally
+					if (unit.getFieldOfView()
+							.contains(damagedAlly.getLocation())) {
+						// Create an order to heal the first unit in the list
+						UnitOrder order = unit.attack(friendlyDamagedInRange.get(0), map, true);
+						// Add the order if it's possible
+						if (addOrderIfPossible(rulesAction, orderCounter, copyState, order, possibleCheckFails, orderFailures)) {
+							// Don't create another order for this unit
+							continue;
+						}
+					}
+					// If we can't see this unit, try to rotate towards it
+					else {
+						Direction directionToAlly = MapLocation.getDirectionTo(unit.getLocation(), damagedAlly.getLocation());
+						// Check if any direction could be found, and we are not already facing that direction
+						if (directionToAlly != null) {
+							UnitOrder order = unit.rotate(Direction.rotationRequiredToFace(unit, directionToAlly));
+							// Add the order if it's possible
+							if (addOrderIfPossible(rulesAction, orderCounter, copyState, order, possibleCheckFails, orderFailures)) {
+								// Don't create another order for this unit
+								continue;
+							}
+						}
+
 					}
 				}
 			}
 
+			// Create a collection of enemies
+			List<GameObject> enemies = new ArrayList<GameObject>(enemyUnits);
+			enemies.addAll(enemyStructures);
+
 			// Check if there are any enemy units within our field-of-view
-			List<Unit> enemiesInRange = StreamEx.of(enemyUnits)
-												.filter(i -> unit.isWithinAttackRange(i.getLocation()))
-												.filter(i -> unit.getFieldOfView()
-																	.contains(i.getLocation()))
-												.toList();
+			List<GameObject> enemiesInRange = StreamEx.of(enemies)
+														.filter(i -> unit.isWithinAttackRange(i.getLocation()))
+														.filter(i -> unit.getFieldOfView()
+																			.contains(i.getLocation()))
+														.toList();
 			if (!enemiesInRange.isEmpty()) {
 
 				// If we are a Soldier and can use our grenade ability
@@ -155,7 +185,7 @@ public class RulesBot
 					long maxUnitsInBlastRange = 1;
 					MapLocation targetLocation = null;
 
-					for (Unit enemy : enemiesInRange) {
+					for (GameObject enemy : enemiesInRange) {
 						// Get the blast area of the attack, if targeted on this enemy
 						List<MapLocation> aoe = map.getAreaAround(enemy.getLocation(), true);
 						// Get the units in the blast area
@@ -195,8 +225,8 @@ public class RulesBot
 				}
 
 				// Attack any enemy unit
-				Unit enemy = enemiesInRange.get(0);
-				UnitOrder order = unit.attack(enemy, map, false);
+				GameObject enemy = enemiesInRange.get(0);
+				UnitOrder order = unit.attack(enemy.getLocation(), false);
 				// Add the order if it's possible
 				if (addOrderIfPossible(rulesAction, orderCounter, copyState, order, possibleCheckFails, orderFailures)) {
 					// Don't create another order for this unit
@@ -204,7 +234,7 @@ public class RulesBot
 				}
 			}
 
-			// Rotate to face enemy structure / enemy unit
+			// Rotate towards enemy unit
 			Optional<Unit> closestEnemy = StreamEx.of(enemyUnits)
 													.sortedBy(i -> MapLocation.getManhattanDist(unit.getLocation(), i.getLocation()))
 													.findFirst();
@@ -221,28 +251,6 @@ public class RulesBot
 					}
 				}
 			}
-			// If there is no enemy within our player's field-of-view, try to rotate towards an enemy structure
-			else if (false) {
-				Optional<Structure> closestStructure = StreamEx.of(enemyStructures)
-																.sortedBy(i -> MapLocation.getManhattanDist(unit.getLocation(),
-																											i.getLocation()))
-																.findFirst();
-				if (closestStructure.isPresent()) {
-					Direction directionToStructure = MapLocation.getDirectionTo(unit.getLocation(), closestStructure.get()
-																													.getLocation());
-					// Check if any direction could be found, and we are not already facing that direction
-					if (directionToStructure != null && unit.getOrientation() != directionToStructure) {
-						UnitOrder order = unit.rotate(Direction.rotationRequiredToFace(unit, directionToStructure));
-						// Add the order if it's possible
-						if (addOrderIfPossible(rulesAction, orderCounter, copyState, order, possibleCheckFails, orderFailures)) {
-							// Don't create another order for this unit
-							continue;
-						}
-					}
-				}
-			}
-
-			// TODO walk along path to an enemy base
 
 			// Rotate away from a wall
 			if (map.getFeatureAtLocation(map.getLocationInDirection(unit.getLocation(), unit.getOrientation(), 1)) instanceof Wall) {
@@ -252,6 +260,78 @@ public class RulesBot
 					// Don't create another order for this unit
 					continue;
 				}
+			}
+
+			// Make sure we can accommodate a path for this unit
+			if (unitPaths.size <= unit.getID())
+				unitPaths.setSize(unit.getID() + 1);
+
+			// Check if we are on a path
+			if (unitPaths.get(unit.getID()) != null) {
+				Array<MapLocation> path = unitPaths.get(unit.getID());
+				boolean onPath = true;
+				// Check if the first location on the path is our current location
+				if (path.first()
+						.equals(unit.getLocation())) {
+					// Remove it
+					path.removeIndex(0);
+				}
+				// Check if we are somewhere in the middle of the path
+				else if (path.contains(unit.getLocation(), false)) {
+					int cPos = path.indexOf(unit.getLocation(), false);
+					// Remove up to and including
+					path.removeRange(0, cPos);
+				} else {
+					onPath = false;
+				}
+
+				// If we are still on the path, move to the next location
+				if (onPath && path.size > 0) {
+					UnitOrder order = unit.move(MapLocation.getDirectionTo(unit.getLocation(), path.first()), map);
+					// Add the order if it's possible
+					if (addOrderIfPossible(rulesAction, orderCounter, copyState, order, possibleCheckFails, orderFailures)) {
+						// Don't create another order for this unit
+						continue;
+					}
+				} else {
+					// We lost the path somewhere, reset it
+					unitPaths.set(unit.getID(), null);
+				}
+			} else {
+				// Find the closest enemy structure
+				Optional<Structure> closestEnemyStructure = StreamEx.of(enemyStructures)
+																	.sortedBy(i -> MapLocation.getManhattanDist(unit.getLocation(),
+																												i.getLocation()))
+																	.findFirst();
+
+				if (closestEnemyStructure.isPresent()) {
+					// We can't plan a path to the structure itself, since it might not be walkable, so get any location
+					// next to it
+					List<MapLocation> nextToStructure = map.getAreaAround(closestEnemyStructure.get()
+																								.getLocation(), false);
+					Optional<MapLocation> closestToTargetLocation = StreamEx.of(nextToStructure)
+																			.sortedByInt(i -> MapLocation.getManhattanDist(	unit.getLocation(),
+																															i))
+																			.findFirst();
+					// If we found any location close to our target
+					if (closestToTargetLocation.isPresent()) {
+						Array<MapLocation> path = map.findPath(unit.getLocation(), closestToTargetLocation.get());
+						// Check if anything was found
+						if (path.size > 0) {
+
+							// Remember the path
+							unitPaths.set(unit.getID(), path);
+							// Move to the first location
+							UnitOrder order = unit.move(MapLocation.getDirectionTo(unit.getLocation(), path.first()), map);
+							// Add the order if it's possible
+							if (addOrderIfPossible(rulesAction, orderCounter, copyState, order, possibleCheckFails, orderFailures)) {
+								// Don't create another order for this unit
+								continue;
+							}
+						}
+					}
+				}
+
 			}
 
 			// Random walk
@@ -266,14 +346,14 @@ public class RulesBot
 			}
 		}
 
-		if (DEBUG && possibleCheckFails.length() > 0) {
+		if (DEBUG_ImPossible && possibleCheckFails.length() > 0) {
 			System.out.printf(	"RB(%d)R(%d)T(%d): some orders not possible, Reasons:%n%s%n",
 								player.getID(),
 								state.getCurrentRound(),
 								state.getMap().currentTick,
 								possibleCheckFails.toString());
 		}
-		if (DEBUG && orderFailures.length() > 0) {
+		if (DEBUG_Fails && orderFailures.length() > 0) {
 			System.out.printf(	"RB(%d)R(%d)T(%d): some orders failed, Reasons:%n%s%n",
 								player.getID(),
 								state.getCurrentRound(),
