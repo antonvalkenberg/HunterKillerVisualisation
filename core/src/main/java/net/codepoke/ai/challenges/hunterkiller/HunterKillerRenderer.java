@@ -137,6 +137,8 @@ public class HunterKillerRenderer
 		// Get a collection of the current player's combined field-of-view, we need this to make certain tiles shaded
 		HashSet<MapLocation> fovSet = state.getPlayer(state.getCurrentPlayer())
 											.getCombinedFieldOfView(map);
+		
+		TextureRegion defaultFloor = skin.getRegion("map/floor_1");
 
 		// Go through the map to draw the map features first
 		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
@@ -184,6 +186,10 @@ public class HunterKillerRenderer
 				}
 
 				else if (object instanceof Structure) {
+					
+					// Draw a default floor below the structure
+					batch.draw(defaultFloor, dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);					
+					
 					// Check if this structure is being controlled by a player
 					Structure structure = (Structure) object;
 					if (structure.getControllingPlayerID() == Constants.STRUCTURE_NO_CONTROL) {
@@ -259,7 +265,7 @@ public class HunterKillerRenderer
 				} else if (object instanceof Floor) {
 					batch.draw(skin.getRegion("map/floor_1"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
 				} else if (object instanceof Space) {
-					batch.draw(skin.getRegion("map/space"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
+					batch.draw(skin.getRegions("map/space").first(), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
 				} else if (object instanceof Wall) {
 					batch.draw(skin.getRegion("map/wall_single"), dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
 				}
