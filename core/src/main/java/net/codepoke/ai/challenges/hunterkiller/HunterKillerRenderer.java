@@ -141,6 +141,8 @@ public class HunterKillerRenderer
 		TextureRegion defaultFloor = skin.getRegion("map/floor_1");
 
 		// Go through the map to draw the map features first
+		boolean showID = Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT);
+		
 		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
 			for (int yCoord = 0; yCoord < map.getMapHeight(); yCoord++) {
 				// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
@@ -216,7 +218,7 @@ public class HunterKillerRenderer
 						}
 
 						// Draw a Structure's controller-ID if CTRL is pressed
-						if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT)) {
+						if (showID) {
 							int controllerID = structure.getControllingPlayerID();
 							defaultFont.setColor(Color.GREEN);
 							defaultFont.draw(batch, "" + controllerID, dh.drawXBaseHP, dh.drawYBaseHP);
@@ -355,7 +357,7 @@ public class HunterKillerRenderer
 					}
 
 					// Draw a Unit's ID if CTRL is pressed
-					if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT)) {
+					if (showID) {
 						int unitID = unit.getID();
 						defaultFont.setColor(Color.GREEN);
 						defaultFont.draw(batch, "" + unitID, dh.drawXBaseHP, dh.drawYBaseHP);
