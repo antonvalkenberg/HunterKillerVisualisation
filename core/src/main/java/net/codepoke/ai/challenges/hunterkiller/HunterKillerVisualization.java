@@ -54,8 +54,11 @@ public class HunterKillerVisualization
 	 * @param max
 	 *            Color values which will be visualised using: value < 0.5 ? min.lerp(med, value / 0.5) :
 	 *            med.lerp(max, (value - 0.5) / 0.5);
+	 * @param ignore
+	 *            Color value to give values that are not set (i.e. < 0).
+	 * 
 	 */
-	public void visualise(float[][] map, Color min, Color med, Color max) {
+	public void visualise(float[][] map, Color min, Color med, Color max, Color ignore) {
 		// Create the array of colors
 		Color[][] valueMap = new Color[map.length][map[0].length];
 
@@ -63,7 +66,10 @@ public class HunterKillerVisualization
 		for (int x = 0; x < valueMap.length; x++) {
 			for (int y = 0; y < valueMap[x].length; y++) {
 				float value = map[x][y];
-				valueMap[x][y] = value < 0.5 ? new Color(min.lerp(med, value / 0.5f)) : new Color(med.lerp(max, (value - 0.5f) / 0.5f));
+				// Note: copy the Color values before lerping, because that method adjusts the object itself.
+				valueMap[x][y] = value > 0 ? value < 0.5 ? min.cpy()
+																.lerp(med, value / 0.5f) : med.cpy()
+																								.lerp(max, (value - 0.5f) / 0.5f) : ignore;
 			}
 		}
 
