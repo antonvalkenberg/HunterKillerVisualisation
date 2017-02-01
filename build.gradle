@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url 'https://raw.github.com/chshawkn/maven-settings-decoder/mvn-repo/' }
@@ -7,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
-        classpath 'cn.home1.tools:maven-settings-decoder:1.0.0.OSS-SNAPSHOT'
+        classpath 'cn.home1.tools:maven-settings-decoder:1.0.0.OSS'
     }
 }
 
@@ -47,6 +48,7 @@ allprojects {
 project(":desktop") {
     apply plugin: "java"
 
+    compileJava.options.encoding = 'UTF-8'
 
     dependencies {
         compile project(":core")
@@ -54,22 +56,22 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
     }
 }
 
 project(":core") {
     apply plugin: "java"
     apply plugin: "maven"
-
-
+    
     dependencies {
    		compile "net.codepoke.ai:poke-ai-base:0.0.3-SNAPSHOT:html5"
-   		compile "net.codepoke.ai.challenges:poke-ai-hunterkiller:0.0.3-SNAPSHOT:html5"
+   		compile "net.codepoke.ai.challenges:poke-ai-hunterkiller:0.0.1-SNAPSHOT:html5"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+   		compile "net.codepoke.ai.challenges:poke-ai-hunterkiller:0.0.1-SNAPSHOT:sources"
+   		compile "net.codepoke.ai:poke-ai-base:0.0.3-SNAPSHOT:sources"
    		testCompile "junit:junit:4.+"
     }
+    
 }
 
 project(":html") {
@@ -82,8 +84,6 @@ project(":html") {
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion:sources"
-        compile "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion:sources"
     }
 }
 

@@ -133,14 +133,19 @@ public class MatchControls
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
-				if (parent.board.scale == 1)
+				String lbl = "";
+				if (parent.board.scale == 1) {
 					parent.board.scale = 1.5f;
-				else if (parent.board.scale == 1.5f)
+					lbl = "1.5";
+				} else if (parent.board.scale == 1.5f) {
 					parent.board.scale = 2f;
-				else if (parent.board.scale == 2)
+					lbl = "2";
+				} else if (parent.board.scale == 2) {
 					parent.board.scale = 1f;
+					lbl = "1";
+				}
 
-				scale.setText(String.format("%1.1f", parent.board.scale));
+				scale.setText(lbl);
 
 				parent.board.invalidateHierarchy();
 				parent.rootTable.invalidateHierarchy();
@@ -264,9 +269,9 @@ public class MatchControls
 		} else if (Gdx.input.isKeyJustPressed(Keys.RIGHT)) {
 			timeline.setValue(timeline.getValue() + playbackSpeed);
 			Gdx.graphics.requestRendering();
-		} else if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
-			playingBack = !playingBack;		
-			playPause.setChecked(playingBack);	
+		} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+			playingBack = !playingBack;
+			playPause.setChecked(playingBack);
 			Gdx.graphics.requestRendering();
 		}
 

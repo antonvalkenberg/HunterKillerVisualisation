@@ -61,7 +61,7 @@ public class HtmlLauncher extends GwtApplication {
 	}
 
 	@Override
-	public ApplicationListener getApplicationListener() {
+	public ApplicationListener createApplicationListener() {
 		instance = this;
 		setLogLevel(LOG_DEBUG);
 		setLoadingListener(new LoadingListener() {
