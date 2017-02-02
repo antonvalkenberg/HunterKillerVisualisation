@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-import net.codepoke.ai.challenge.hunterkiller.Constants;
+import net.codepoke.ai.challenge.hunterkiller.HunterKillerConstants;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
@@ -163,7 +163,7 @@ public class HunterKillerRenderer
 				// Change the color if we need to tint this location
 				if (tinted) {
 					// Check if space, them don't tint.
-					if (!(tile[Constants.MAP_INTERNAL_FEATURE_INDEX] instanceof Space))
+					if (!(tile[HunterKillerConstants.MAP_INTERNAL_FEATURE_INDEX] instanceof Space))
 						batch.setColor(Color.GRAY);
 				}
 
@@ -178,7 +178,7 @@ public class HunterKillerRenderer
 
 				// Draw MapFeatures first, since Units are drawn on top of those
 
-				GameObject object = tile[Constants.MAP_INTERNAL_FEATURE_INDEX];
+				GameObject object = tile[HunterKillerConstants.MAP_INTERNAL_FEATURE_INDEX];
 
 				// Check if this position has been cached
 				if (mapCache.containsKey(mapPosition)) {
@@ -194,7 +194,7 @@ public class HunterKillerRenderer
 
 					// Check if this structure is being controlled by a player
 					Structure structure = (Structure) object;
-					if (structure.getControllingPlayerID() == Constants.STRUCTURE_NO_CONTROL) {
+					if (structure.getControllingPlayerID() == HunterKillerConstants.STRUCTURE_NO_CONTROL) {
 						String textureLocation = "map/base_p5_" + getStructureTypeIndex(structure.getType());
 						batch.draw(skin.getRegion(textureLocation), dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);
 					} else {
@@ -314,9 +314,9 @@ public class HunterKillerRenderer
 				dh.calculateDrawCoordinates(xCoord, yCoord);
 
 				// Check if there is a unit on this location
-				if (tile[Constants.MAP_INTERNAL_UNIT_INDEX] != null) {
+				if (tile[HunterKillerConstants.MAP_INTERNAL_UNIT_INDEX] != null) {
 					// Draw Units
-					Unit unit = (Unit) tile[Constants.MAP_INTERNAL_UNIT_INDEX];
+					Unit unit = (Unit) tile[HunterKillerConstants.MAP_INTERNAL_UNIT_INDEX];
 
 					// Get the rotation we need to give while drawing, note that a rotation of 0 is the same as the
 					// sprite stands in the file (which is facing left, or WEST).
@@ -480,7 +480,7 @@ public class HunterKillerRenderer
 	 * player)
 	 */
 	private String getTextureLocation(Controlled target) {
-		if (target.getControllingPlayerID() != Constants.STRUCTURE_NO_CONTROL)
+		if (target.getControllingPlayerID() != HunterKillerConstants.STRUCTURE_NO_CONTROL)
 			return controlledTextures.get(target.getClass())[target.getControllingPlayerID()];
 		else
 			throw new RuntimeException("Error: cannot get the texture location of an uncontrolled object");
@@ -561,7 +561,7 @@ public class HunterKillerRenderer
 			double weight = abs(min(r.nextGaussian(), 2));
 
 			// We are only caching MapFeatures, because they change so infrequently
-			MapFeature feature = (MapFeature) content[position][Constants.MAP_INTERNAL_FEATURE_INDEX];
+			MapFeature feature = (MapFeature) content[position][HunterKillerConstants.MAP_INTERNAL_FEATURE_INDEX];
 			// Check if the feature is a Wall
 			if (feature instanceof Wall) {
 				// 1 = Up, 2 == Right, 4 == Down, 8 == Left
