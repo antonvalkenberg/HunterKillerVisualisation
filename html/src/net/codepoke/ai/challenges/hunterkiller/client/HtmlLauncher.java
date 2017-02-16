@@ -38,23 +38,23 @@ public class HtmlLauncher extends GwtApplication {
 
 	int previousGraphRound = 0;
 
-//	public String getPreloaderBaseURL() {
-//		return GWT.getModuleBaseURL() + "../assets/";
-//	}
+	public String getPreloaderBaseURL() {
+		return GWT.getModuleBaseURL() + "../assets/";
+	}
 
 	@Override
 	public GwtApplicationConfiguration getConfig() {		
 		GwtApplicationConfiguration config = new GwtApplicationConfiguration(WIDTH, HEIGHT);
 
-//		Element element = Document.get()
-//									.getElementById("embed-html");
-//		VerticalPanel panel = new VerticalPanel();
-//		panel.setWidth("100%");
-//		panel.setHeight("100%");
-//		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-//		panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-//		element.appendChild(panel.getElement());
-//		config.rootPanel = panel;
+		Element element = Document.get()
+									.getElementById("embed-html");
+		VerticalPanel panel = new VerticalPanel();
+		panel.setWidth("100%");
+		panel.setHeight("100%");
+		panel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		element.appendChild(panel.getElement());
+		config.rootPanel = panel;
 
 		return config;
 	}
