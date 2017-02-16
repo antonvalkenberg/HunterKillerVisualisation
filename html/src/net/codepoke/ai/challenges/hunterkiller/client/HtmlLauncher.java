@@ -39,7 +39,8 @@ public class HtmlLauncher extends GwtApplication {
 	int previousGraphRound = 0;
 
 	public String getPreloaderBaseURL() {
-		return GWT.getModuleBaseURL() + "../assets/";
+		// This checks the variable in Javascript that will be set to the correct path.
+		return getApplicationPath();
 	}
 
 	@Override
@@ -170,9 +171,9 @@ public class HtmlLauncher extends GwtApplication {
 		}
 	}
 
-	native String getTestVar() /*-{
-								return eval('$wnd.testDEV');
-								}-*/;
+	native String getApplicationPath() /*-{
+										return eval('$wnd.assetPath');
+										}-*/;
 
 	native int getWindowInnerWidth() /*-{
 										return $wnd.innerWidth;
