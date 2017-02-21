@@ -49,10 +49,12 @@ public abstract class MatchRenderer<S extends State, A extends Action>
 		this.scale = scale;
 	}
 
+	/** The current state the renderer is visualizing. */
 	public S getState() {
 		return state;
 	}
 
+	/** The action that led to this state, null if initial state or going backwards. */
 	public A getAction() {
 		return action;
 	}

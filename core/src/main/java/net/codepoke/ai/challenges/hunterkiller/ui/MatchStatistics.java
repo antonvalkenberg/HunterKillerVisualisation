@@ -70,7 +70,7 @@ public class MatchStatistics
 		row();
 
 		add(scoreBar).expandX()
-						.width(Value.percentWidth(1, parent.board))
+						.width(Value.percentWidth(1, parent.renderer))
 						.pad(10)
 						.fill();
 

@@ -134,20 +134,20 @@ public class MatchControls
 			public void clicked(InputEvent event, float x, float y) {
 
 				String lbl = "";
-				if (parent.board.scale == 1) {
-					parent.board.scale = 1.5f;
+				if (parent.renderer.scale == 1) {
+					parent.renderer.scale = 1.5f;
 					lbl = "1.5";
-				} else if (parent.board.scale == 1.5f) {
-					parent.board.scale = 2f;
+				} else if (parent.renderer.scale == 1.5f) {
+					parent.renderer.scale = 2f;
 					lbl = "2";
-				} else if (parent.board.scale == 2) {
-					parent.board.scale = 1f;
+				} else if (parent.renderer.scale == 2) {
+					parent.renderer.scale = 1f;
 					lbl = "1";
 				}
 
 				scale.setText(lbl);
 
-				parent.board.invalidateHierarchy();
+				parent.renderer.invalidateHierarchy();
 				parent.rootTable.invalidateHierarchy();
 				parent.rootTable.layout();
 				parent.rootTable.pack();
@@ -244,7 +244,7 @@ public class MatchControls
 
 		bottomControls.add(timeline)
 						.expandX()
-						.width(Value.percentWidth(1, parent.board));
+						.width(Value.percentWidth(1, parent.renderer));
 
 		bottomControls.row();
 

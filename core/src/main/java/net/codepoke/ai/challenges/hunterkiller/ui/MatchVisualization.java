@@ -38,7 +38,10 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	// UI Widget for displaying the statistics & the controls
 	MatchStatistics statistics;
 	MatchControls controls;
-	MatchRenderer<S, A> board;
+	MatchRenderer<S, A> renderer;
+
+	/** The listeners which will be updated once a state is visualized. */
+	Array<StateVisualizationListener<S, A>> stateVisualizationListeners;
 
 	// The error message to be displayed if the current State cannot be displayed.
 	Label errorMessage;
@@ -48,9 +51,9 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 
 	/** The states available for rendering. */
 	Array<S> states;
-	
+
 	/** The actions that led to state X. */
-	Array<A> actions; 
+	Array<A> actions;
 
 	// The ideal width/height for this Visualization, only valid after setting the initial state.
 	int width = 640, height = 480;
@@ -65,16 +68,18 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 			}
 
 		});
+
+		stateVisualizationListeners = new Array<StateVisualizationListener<S, A>>();
 	}
 
 	@Override
 	public final void create() {
 
 		Gdx.graphics.setContinuousRendering(false);
-		
+
 		// Repaint every second
 		Timer.schedule(new Task() {
-			
+
 			@Override
 			public void run() {
 				Gdx.graphics.requestRendering();
@@ -89,14 +94,14 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 		stage = new Stage(new ScreenViewport());
 		states = new Array<S>();
 		actions = new Array<A>();
-		
+
 		Gdx.input.setInputProcessor(stage);
 
 		errorMessage = new Label("No Error", uiSkin);
 		errorMessage.setVisible(true);
 		errorMessage.toFront();
 
-		board = createRenderer(this, uiSkin);
+		renderer = createRenderer(this, uiSkin);
 		controls = new MatchControls(this, uiSkin);
 		statistics = new MatchStatistics(this, uiSkin);
 
@@ -111,7 +116,7 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	protected void setupScene(Skin uiSkin) {
 		final Table boardBase = new Table();
 		boardBase.setBackground(new NinePatchDrawable(uiSkin.getPatch("ui/panel_btn_brown")));
-		boardBase.stack(board, errorMessage)
+		boardBase.stack(renderer, errorMessage)
 					.pad(10);
 
 		rootTable.add(statistics)
@@ -139,13 +144,13 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	// Called whenever we want to display a different state
 	private final void stateChange(S newState, A action) {
 
-		S prevState = board.getState();
+		S prevState = renderer.getState();
 
-		board.setState(newState, action);
+		renderer.setState(newState, action);
 		statistics.setStateInfo(getPlayers(newState), getScores(newState));
-		onStateChange(newState, action);
+		onStateChange(prevState, action, newState);
 
-		board.invalidateHierarchy();
+		renderer.invalidateHierarchy();
 		rootTable.layout();
 		rootTable.pack();
 
@@ -168,7 +173,7 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 
 	@Override
 	public synchronized void render() {
-		
+
 		stage.act(Gdx.graphics.getDeltaTime());
 
 		int currentRound = controls.getCurrentRound();
@@ -178,7 +183,7 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 			S s = states.get(currentRound);
 			A a = actions.get(currentRound);
 
-			if (board.getState() != s) {
+			if (renderer.getState() != s) {
 				stateChange(s, a);
 			}
 		} else {
@@ -222,10 +227,10 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	public void displayError(String error) {
 		if (error == null) {
 			errorMessage.setText("");
-			board.setVisible(true);
+			renderer.setVisible(true);
 		} else {
 			errorMessage.setText(error);
-			board.setVisible(false);
+			renderer.setVisible(false);
 		}
 	}
 
@@ -262,13 +267,30 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 
 	/**
 	 * Called whenever the state is changed.
-	 * 
+	 *
+	 * @param oldState
+	 *            The previous state, possibly null (initial state).
+	 * @param action
+	 *            The action that led to the new state, null if it is the initial state.
 	 * @param newState
-	 *            The new state
-	 * @param action 			  
-	 *            The action that led to this state, null if it is the initial state.
+	 *            The new state.
 	 */
-	public void onStateChange(S newState, A action) {
+	public void onStateChange(S oldState, A action, S newState) {
+		// Call for every listener that has subscribed
+		for (int i = 0; i < stateVisualizationListeners.size; i++) {
+			stateVisualizationListeners.get(i)
+										.newStateVisualized(oldState, action, newState);
+		}
+	}
+
+	/**
+	 * Subscribe a listener to any state-visualization events.
+	 * 
+	 * @param listener
+	 *            The listener to subscribe.
+	 */
+	public void addStateVisualizationListeners(StateVisualizationListener<S, A> listener) {
+		stateVisualizationListeners.add(listener);
 	}
 
 	/** Called when the MatchVisualization has finished {@link #create()}. */

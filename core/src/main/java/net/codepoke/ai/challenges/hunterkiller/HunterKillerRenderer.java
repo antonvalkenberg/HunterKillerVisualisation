@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-import net.codepoke.ai.challenge.hunterkiller.HunterKillerConstants;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
+import net.codepoke.ai.challenge.hunterkiller.HunterKillerConstants;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Map;
 import net.codepoke.ai.challenge.hunterkiller.MapLocation;
@@ -500,11 +500,11 @@ public class HunterKillerRenderer
 			return 0;
 		case SOUTH:
 			// The rotation that is used measures counter-clockwise, which means bottom/SOUTH is at 90 degrees.
-			return 90;
+			return 0;
 		case EAST:
 			return 180;
 		case NORTH:
-			return 270;
+			return 0;
 		default:
 			throw new RuntimeException("Unsupported Direction value " + direction);
 		}
@@ -644,6 +644,16 @@ public class HunterKillerRenderer
 	 */
 	public void setValueMap(Color[][] map) {
 		valueMap = map;
+	}
+
+	@Override
+	public void setState(HunterKillerState state, HunterKillerAction action) {
+		this.state = state;
+		this.action = action;
+		setSize(getPrefWidth(), getPrefHeight());
+		invalidateHierarchy();
+		// Reset the value map
+		valueMap = null;
 	}
 
 	@Override
