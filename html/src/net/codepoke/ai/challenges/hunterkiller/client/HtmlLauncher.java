@@ -172,7 +172,7 @@ public class HtmlLauncher extends GwtApplication {
 	}
 
 	native String getApplicationPath() /*-{
-										return eval('$wnd.assetPath');
+										return $wnd.assetPath;
 										}-*/;
 
 	native int getWindowInnerWidth() /*-{
