@@ -276,13 +276,13 @@ map/value
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall[0]
+map/wall
   rotate: false
   xy: 851, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 0
 map/wall_single
   rotate: false
   xy: 851, 1
@@ -290,201 +290,201 @@ map/wall_single
   orig: 24, 24
   offset: 0, 0
   index: -1
-map/wall[10]
+map/wall
   rotate: false
   xy: 876, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 0
-map/wall[10]
+  index: 1
+map/wall
   rotate: false
   xy: 901, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 1
-map/wall[10]
+  index: 2
+map/wall
   rotate: false
   xy: 926, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 2
-map/wall[10]
+  index: 3
+map/wall
   rotate: false
   xy: 951, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 3
-map/wall[10]
+  index: 4
+map/wall
   rotate: false
   xy: 976, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 4
-map/wall[10]
+  index: 6
+map/wall
   rotate: false
   xy: 1001, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 5
-map/wall[11]
+  index: 7
+map/wall
   rotate: false
   xy: 1026, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[12]
+  index: 8
+map/wall
   rotate: false
   xy: 1051, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[13]
+  index: 9
+map/wall
   rotate: false
   xy: 1076, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[14]
+  index: 11
+map/wall
   rotate: false
   xy: 1101, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[15]
+  index: 12
+map/wall
   rotate: false
   xy: 1126, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[1]
+  index: 13
+map/wall
   rotate: false
   xy: 1151, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[2]
+  index: 14
+map/wall
   rotate: false
   xy: 1176, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[3]
+  index: 15
+map/wall_10
   rotate: false
   xy: 1201, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[4]
+  index: 0
+map/wall_10
   rotate: false
   xy: 1226, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[5]
+  index: 1
+map/wall_10
   rotate: false
   xy: 1251, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 0
-map/wall[5]
+  index: 2
+map/wall_10
   rotate: false
   xy: 1276, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 1
-map/wall[5]
+  index: 3
+map/wall_10
   rotate: false
   xy: 1301, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 2
-map/wall[5]
+  index: 4
+map/wall_10
   rotate: false
   xy: 1326, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: 3
-map/wall[6]
+  index: 5
+map/wall_5
   rotate: false
   xy: 1351, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[7]
+  index: 0
+map/wall_5
   rotate: false
   xy: 1376, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[8]
+  index: 1
+map/wall_5
   rotate: false
   xy: 1401, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/wall[9]
+  index: 2
+map/wall_5
   rotate: false
   xy: 1426, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 3
 
 game3.png
 size: 512,32
 format: RGBA8888
 filter: MipMapNearestNearest,MipMapNearestNearest
 repeat: none
-map/decals/cobweb[12]
+map/decals/cobweb
   rotate: false
   xy: 1, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/decals/cobweb[3]
+  index: 3
+map/decals/cobweb
   rotate: false
   xy: 26, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/decals/cobweb[6]
+  index: 6
+map/decals/cobweb
   rotate: false
   xy: 51, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
-map/decals/cobweb[9]
+  index: 9
+map/decals/cobweb
   rotate: false
   xy: 76, 1
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
-  index: -1
+  index: 12
 map/decals/oryx_16bit_scifi_world
   rotate: false
   xy: 101, 1

@@ -576,7 +576,7 @@ public class HunterKillerRenderer
 				wallMask |= isWalled(features, 7) ? DOWN_MASK : 0;
 				wallMask |= isWalled(features, 3) ? LEFT_MASK : 0;
 
-				cell.add(sample("map/wall[" + wallMask + "]", weight));
+				cell.add(sample("map/wall_" + wallMask, weight));
 			} else if (feature instanceof Floor) {
 				// Add floor
 				cell.add(sample("map/floor", weight));
@@ -596,7 +596,7 @@ public class HunterKillerRenderer
 
 				// Draw cobwebs only for some arbitrary weight
 				if (weight > 1.3f) {
-					String key = "map/decals/cobweb[" + wallMask + "]";
+					String key = "map/decals/cobweb_" + wallMask;
 					if (skin.has(key, TextureRegion.class)) {
 						cell.add(skin.getRegion(key));
 					}
