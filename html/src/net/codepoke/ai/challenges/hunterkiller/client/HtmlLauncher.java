@@ -21,12 +21,14 @@ import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Player;
 import net.codepoke.ai.challenges.hunterkiller.HunterKillerVisualization;
-import net.codepoke.ai.challenges.hunterkiller.ui.MatchVisualization;
+import net.codepoke.ai.challenges.hunterkiller.ui.MatchFrame;
+import net.codepoke.ai.challenges.hunterkiller.ui.FrameResizeListener;
 import net.codepoke.ai.network.MatchMessageParser;
 import net.codepoke.ai.network.MatchMessageParser.MessageResponse;
 import net.codepoke.ai.network.MatchMessageParser.MessageResponseListener;
 
-public class HtmlLauncher extends GwtApplication {
+public class HtmlLauncher
+		extends GwtApplication {
 
 	static final int WIDTH = 480;
 	static final int HEIGHT = 320;
@@ -34,7 +36,9 @@ public class HtmlLauncher extends GwtApplication {
 	static final String HOST_NAME = "host", MATCH_NAME = "match_name", GAME_NAME = "game_name";
 
 	static HtmlLauncher instance;
-	static MatchVisualization<HunterKillerState, HunterKillerAction> gameInstance;
+	static MatchFrame<HunterKillerState, HunterKillerAction> gameInstance;
+
+	public FrameResizeListener listener;
 
 	int previousGraphRound = 0;
 
@@ -44,7 +48,7 @@ public class HtmlLauncher extends GwtApplication {
 	}
 
 	@Override
-	public GwtApplicationConfiguration getConfig() {		
+	public GwtApplicationConfiguration getConfig() {
 		GwtApplicationConfiguration config = new GwtApplicationConfiguration(WIDTH, HEIGHT);
 
 		Element element = Document.get()
@@ -62,7 +66,7 @@ public class HtmlLauncher extends GwtApplication {
 
 	@Override
 	public ApplicationListener createApplicationListener() {
-		
+
 		instance = this;
 		setLogLevel(LOG_DEBUG);
 		setLoadingListener(new LoadingListener() {
@@ -72,7 +76,7 @@ public class HtmlLauncher extends GwtApplication {
 			}
 
 			@Override
-			public void afterSetup() {	
+			public void afterSetup() {
 				matchLoad();
 				scaleCanvas();
 				setupResizeHook();
@@ -108,6 +112,18 @@ public class HtmlLauncher extends GwtApplication {
 
 					});
 
+		// Subscribe to resize events of the match frame
+		listener = new FrameResizeListener() {
+
+			@Override
+			public void updateSize(int width, int height) {
+				scaleCanvas(width, height);
+				handleResize();
+			}
+
+		};
+		gameInstance.addFrameResizeListeners(listener);
+
 		return gameInstance;
 	}
 
@@ -140,21 +156,23 @@ public class HtmlLauncher extends GwtApplication {
 	}
 
 	void scaleCanvas() {
+		scaleCanvas(gameInstance.getWidth(), gameInstance.getHeight());
+	}
+
+	void scaleCanvas(int width, int height) {
 		Element element = Document.get()
 									.getElementById("embed-html");
-		int newWidth = gameInstance.getWidth();
-		int newHeight = gameInstance.getHeight();
-
+		
 		NodeList<Element> nl = element.getElementsByTagName("canvas");
 
 		if (nl != null && nl.getLength() > 0) {
 			Element canvas = nl.getItem(0);
-			canvas.setAttribute("width", "" + newWidth + "px");
-			canvas.setAttribute("height", "" + newHeight + "px");
+			canvas.setAttribute("width", "" + width + "px");
+			canvas.setAttribute("height", "" + height + "px");
 			canvas.getStyle()
-					.setWidth(newWidth, Style.Unit.PX);
+					.setWidth(width, Style.Unit.PX);
 			canvas.getStyle()
-					.setHeight(newHeight, Style.Unit.PX);
+					.setHeight(height, Style.Unit.PX);
 		}
 	}
 
