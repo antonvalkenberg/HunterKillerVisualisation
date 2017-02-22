@@ -16,14 +16,14 @@ public abstract class MatchRenderer<S extends State, A extends Action>
 	/** The action that led to this state, potentially null. */
 	protected A action;
 
-	protected MatchVisualization<S, A> parent;
+	protected MatchFrame<S, A> parent;
 
 	protected Skin skin;
 
 	/** The scale with which should be rendered, set through controls to 1, 1.5, 2 */
 	protected float scale = 1;
 
-	public MatchRenderer(MatchVisualization<S, A> parent, Skin skin) {
+	public MatchRenderer(MatchFrame<S, A> parent, Skin skin) {
 		this.skin = skin;
 		this.parent = parent;
 	}

@@ -30,7 +30,7 @@ import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Unit;
 import net.codepoke.ai.challenge.hunterkiller.orders.HunterKillerOrder;
 import net.codepoke.ai.challenge.hunterkiller.orders.UnitOrder;
 import net.codepoke.ai.challenges.hunterkiller.ui.MatchRenderer;
-import net.codepoke.ai.challenges.hunterkiller.ui.MatchVisualization;
+import net.codepoke.ai.challenges.hunterkiller.ui.MatchFrame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -88,7 +88,7 @@ public class HunterKillerRenderer
 	private int ticks = 0;
 	private float timePassed;
 
-	public HunterKillerRenderer(MatchVisualization<HunterKillerState, HunterKillerAction> parent, Skin skin) {
+	public HunterKillerRenderer(MatchFrame<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		super(parent, skin);
 		defaultFont = skin.getFont("kenny-8outlined-font");
 		controlledTextures = new ObjectMap<Class, String[]>();

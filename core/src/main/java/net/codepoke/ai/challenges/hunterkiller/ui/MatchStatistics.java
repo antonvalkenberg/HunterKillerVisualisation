@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.Scaling;
 public class MatchStatistics
 		extends Table {
 
-	MatchVisualization parent;
+	MatchFrame parent;
 
 	Skin skin;
 
@@ -43,7 +43,7 @@ public class MatchStatistics
 	Image scoreStart, scoreEnd;
 	Table scoreBar;
 
-	public MatchStatistics(MatchVisualization parent, Skin skin) {
+	public MatchStatistics(MatchFrame parent, Skin skin) {
 
 		this.parent = parent;
 		this.skin = skin;

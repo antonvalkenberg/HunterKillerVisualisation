@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public abstract class MatchVisualization<S extends State, A extends Action>
+public abstract class MatchFrame<S extends State, A extends Action>
 		extends ApplicationAdapter {
 
 	// The root on which we layout the UI and rendering of the state.
@@ -43,6 +43,9 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	/** The listeners which will be updated once a state is visualized. */
 	Array<StateVisualizationListener<S, A>> stateVisualizationListeners;
 
+	/** Called whenever the preferred size (see width, height) of this frame are updated based on its contents. */
+	Array<FrameResizeListener> frameResizeListeners;
+
 	// The error message to be displayed if the current State cannot be displayed.
 	Label errorMessage;
 
@@ -58,7 +61,7 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	// The ideal width/height for this Visualization, only valid after setting the initial state.
 	int width = 640, height = 480;
 
-	public MatchVisualization(GameRules<S, A> rules) {
+	public MatchFrame(GameRules<S, A> rules) {
 		this.parser = new MatchMessageParser<S, A>(rules);
 		this.parser.addStateListeners(new StateCreationListener<S, A>() {
 
@@ -70,6 +73,7 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 		});
 
 		stateVisualizationListeners = new Array<StateVisualizationListener<S, A>>();
+		frameResizeListeners = new Array<FrameResizeListener>();
 	}
 
 	@Override
@@ -150,25 +154,7 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 		statistics.setStateInfo(getPlayers(newState), getScores(newState));
 		onStateChange(prevState, action, newState);
 
-		renderer.invalidateHierarchy();
-		rootTable.layout();
-		rootTable.pack();
-
-		// Resize to the ideal size upon receiving the first State
-		if (prevState == null) {
-			Gdx.app.postRunnable(new Runnable() {
-
-				@Override
-				public void run() {
-					Gdx.app.getGraphics()
-							.setWindowedMode((int) rootTable.getPrefWidth(), (int) rootTable.getPrefHeight());
-				}
-
-			});
-
-			width = (int) rootTable.getPrefWidth();
-			height = (int) rootTable.getPrefHeight();
-		}
+		recalculatePreferredSize(prevState == null);
 	}
 
 	@Override
@@ -204,6 +190,39 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 		stage.getViewport()
 				.update(width, height, true);
 		rootTable.invalidateHierarchy();
+		recalculatePreferredSize(false);
+	}
+
+	/**
+	 * Request a pack() and layout() on the table given the current contents and updates the size of the frame based on
+	 * the minimum size required to display everything.
+	 */
+	public void recalculatePreferredSize(boolean resizeFrame) {
+
+		renderer.invalidateHierarchy();
+		rootTable.invalidateHierarchy();
+		rootTable.layout();
+		rootTable.pack();
+
+		width = (int) rootTable.getPrefWidth();
+		height = (int) rootTable.getPrefHeight();
+
+		for (FrameResizeListener listener : frameResizeListeners) {
+			listener.updateSize(width, height);
+		}
+
+		if (!resizeFrame)
+			return;
+
+		Gdx.app.postRunnable(new Runnable() {
+
+			@Override
+			public void run() {
+				Gdx.app.getGraphics()
+						.setWindowedMode(width, height);
+			}
+
+		});
 	}
 
 	/**
@@ -283,14 +302,14 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 		}
 	}
 
-	/**
-	 * Subscribe a listener to any state-visualization events.
-	 * 
-	 * @param listener
-	 *            The listener to subscribe.
-	 */
+	/** Subscribe a listener to any state-visualization events. */
 	public void addStateVisualizationListeners(StateVisualizationListener<S, A> listener) {
 		stateVisualizationListeners.add(listener);
+	}
+
+	/** Subscribe a listener to any updates to the preferred size. */
+	public void addFrameResizeListeners(FrameResizeListener listener) {
+		frameResizeListeners.add(listener);
 	}
 
 	/** Called when the MatchVisualization has finished {@link #create()}. */
@@ -298,7 +317,7 @@ public abstract class MatchVisualization<S extends State, A extends Action>
 	}
 
 	/** Creates the visualization which should render the state. Delayed so we can instantiate the Skin & parent. */
-	public abstract MatchRenderer<S, A> createRenderer(MatchVisualization<S, A> parent, Skin skin);
+	public abstract MatchRenderer<S, A> createRenderer(MatchFrame<S, A> parent, Skin skin);
 
 	/** Should parse and return the player names in the State. */
 	public abstract String[] getPlayers(S state);

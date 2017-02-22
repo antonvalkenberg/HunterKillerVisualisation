@@ -67,8 +67,6 @@ project(":core") {
    		compile "net.codepoke.ai:poke-ai-base:0.0.3-SNAPSHOT:html5"
    		compile "net.codepoke.ai.challenges:poke-ai-hunterkiller:0.0.1-SNAPSHOT:html5"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-   		compile "net.codepoke.ai.challenges:poke-ai-hunterkiller:0.0.1-SNAPSHOT:sources"
-   		compile "net.codepoke.ai:poke-ai-base:0.0.3-SNAPSHOT:sources"
    		testCompile "junit:junit:4.+"
     }
     

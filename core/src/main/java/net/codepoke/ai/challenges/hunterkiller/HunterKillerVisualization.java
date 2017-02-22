@@ -4,13 +4,13 @@ import net.codepoke.ai.challenge.hunterkiller.HunterKillerAction;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerRules;
 import net.codepoke.ai.challenge.hunterkiller.HunterKillerState;
 import net.codepoke.ai.challenge.hunterkiller.Player;
-import net.codepoke.ai.challenges.hunterkiller.ui.MatchVisualization;
+import net.codepoke.ai.challenges.hunterkiller.ui.MatchFrame;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class HunterKillerVisualization
-		extends MatchVisualization<HunterKillerState, HunterKillerAction> {
+		extends MatchFrame<HunterKillerState, HunterKillerAction> {
 
 	HunterKillerRenderer renderer;
 
@@ -19,7 +19,7 @@ public class HunterKillerVisualization
 	}
 
 	@Override
-	public HunterKillerRenderer createRenderer(MatchVisualization<HunterKillerState, HunterKillerAction> parent, Skin skin) {
+	public HunterKillerRenderer createRenderer(MatchFrame<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		renderer = new HunterKillerRenderer(parent, skin);
 		return renderer;
 	}

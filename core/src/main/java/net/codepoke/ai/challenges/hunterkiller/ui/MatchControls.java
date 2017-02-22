@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.Align;
 public class MatchControls
 		extends Table {
 
-	MatchVisualization parent;
+	MatchFrame parent;
 
 	// The skin for this UI Widget
 	Skin skin;
@@ -47,7 +47,7 @@ public class MatchControls
 	// Counter to go to the next round if we are playing back.
 	private float currentDt = 0;
 
-	public MatchControls(final MatchVisualization parent, Skin skin) {
+	public MatchControls(final MatchFrame parent, Skin skin) {
 
 		this.parent = parent;
 		this.skin = skin;
@@ -146,20 +146,7 @@ public class MatchControls
 				}
 
 				scale.setText(lbl);
-
-				parent.renderer.invalidateHierarchy();
-				parent.rootTable.invalidateHierarchy();
-				parent.rootTable.layout();
-				parent.rootTable.pack();
-				Gdx.app.postRunnable(new Runnable() {
-
-					@Override
-					public void run() {
-						Gdx.app.getGraphics()
-								.setWindowedMode((int) parent.rootTable.getPrefWidth(), (int) parent.rootTable.getPrefHeight());
-					}
-
-				});
+				parent.recalculatePreferredSize(true);
 			}
 		});
 

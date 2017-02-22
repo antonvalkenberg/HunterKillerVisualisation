@@ -51,8 +51,8 @@ public class DesktopLauncher {
 
 		new LwjglApplication(listener, config);
 
-		// testStream(listener, "localhost:9000/competition/stream_match" , "HunterKiller" ,
-		// "HunterKiller-glv3jsudnt9gbuvavqtesuhl5k-6");
+		// testStream(listener, "192.168.1.196:9000/competition/stream_match", "HunterKiller",
+		// "HunterKiller-ombgo2vplhttkovn10kctb8i87-0");
 		simulateStream(listener);
 	}
 

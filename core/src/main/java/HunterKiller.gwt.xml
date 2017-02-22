@@ -3,5 +3,15 @@
 <module>
 	<inherits name="poke-ai-base"/>
 	<inherits name="poke-ai-hunterkiller" />
-	<source path="net/codepoke/ai/challenges/hunterkiller" />
+	<source path="net/codepoke/ai/challenges/hunterkiller" />	
+	
+	<extend-configuration-property name="gdx.reflect.include" value="net.codepoke.ai.challenges.hunterkiller.ui.GWTCompilationFixes" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.utils.IntArray" />
+		
+	<extend-configuration-property name="gdx.reflect.exclude" value="com.badlogic.gdx.graphics.g3d" />
+	<extend-configuration-property name="gdx.reflect.exclude" value="com.badlogic.gdx.graphics.g3d.model" />
+	<extend-configuration-property name="gdx.reflect.exclude" value="com.badlogic.gdx.graphics.g3d.model.data" />
+	<extend-configuration-property name="gdx.reflect.exclude" value="com.badlogic.gdx.graphics.g3d.particles" />
+	<extend-configuration-property name="gdx.reflect.exclude" value="com.badlogic.gdx.graphics.g3d.particles.renderers" />
+	
 </module>

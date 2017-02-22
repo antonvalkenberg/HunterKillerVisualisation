@@ -72,8 +72,7 @@ public class HtmlLauncher extends GwtApplication {
 			}
 
 			@Override
-			public void afterSetup() {				
-				debug("main", "Starting Setup Application Listener");
+			public void afterSetup() {	
 				matchLoad();
 				scaleCanvas();
 				setupResizeHook();
@@ -172,6 +171,8 @@ public class HtmlLauncher extends GwtApplication {
 	}
 
 	native String getApplicationPath() /*-{
+										if($wnd.assetPath === undefined)
+											return "/assets/";
 										return $wnd.assetPath;
 										}-*/;
 
