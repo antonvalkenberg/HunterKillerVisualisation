@@ -29,8 +29,8 @@ import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Soldier;
 import net.codepoke.ai.challenge.hunterkiller.gameobjects.unit.Unit;
 import net.codepoke.ai.challenge.hunterkiller.orders.HunterKillerOrder;
 import net.codepoke.ai.challenge.hunterkiller.orders.UnitOrder;
-import net.codepoke.ai.challenges.hunterkiller.ui.MatchRenderer;
 import net.codepoke.ai.challenges.hunterkiller.ui.MatchFrame;
+import net.codepoke.ai.challenges.hunterkiller.ui.MatchRenderer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -88,6 +88,8 @@ public class HunterKillerRenderer
 	private int ticks = 0;
 	private float timePassed;
 
+	private boolean showRejectedOrders = false;
+
 	public HunterKillerRenderer(MatchFrame<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		super(parent, skin);
 		defaultFont = skin.getFont("kenny-8outlined-font");
@@ -142,6 +144,9 @@ public class HunterKillerRenderer
 
 		// Go through the map to draw the map features first
 		boolean showID = Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT);
+
+		// Check if the toggle 'show rejected orders' was pressed
+		showRejectedOrders = Gdx.input.isKeyPressed(Keys.NUM_2);
 
 		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
 			for (int yCoord = 0; yCoord < map.getMapHeight(); yCoord++) {
@@ -376,19 +381,71 @@ public class HunterKillerRenderer
 		// Check if we need to draw any actions
 		if (action != null) {
 
-			// Adjust the color of the batch, to draw with a lighter alpha
+			// Remember the original batch color
 			Color originalColor = batch.getColor();
-			batch.setColor(originalColor.r, originalColor.g, originalColor.b, 0.8f);
+			// Remember the original font color
+			Color originalFontColor = defaultFont.getColor();
+
+			// Change the font's scale
+			float ogFontScaleX = defaultFont.getData().scaleX;
+			float ogFontScaleY = defaultFont.getData().scaleY;
+			defaultFont.getData().scaleX *= scale;
+			defaultFont.getData().scaleY *= scale;
 
 			for (HunterKillerOrder order : action.getOrders()) {
-				// Only draw orders that were accepted
-				if (!order.isAccepted())
-					continue;
+				// Set a color for drawing the actions with a slightly lighter alpha
+				batch.setColor(originalColor.r, originalColor.g, originalColor.b, 0.8f);
+				// Draw type of actions with a letter in green
+				defaultFont.setColor(Color.GREEN);
+
+				// Set a different color for rejected orders
+				if (!order.isAccepted()) {
+					// Check if we even want to draw rejected orders
+					if (!showRejectedOrders)
+						continue;
+					batch.setColor(Color.PINK);
+					defaultFont.setColor(Color.RED);
+				}
 
 				if (order instanceof UnitOrder) {
 					UnitOrder unitOrder = (UnitOrder) order;
 					UnitOrderType type = unitOrder.getOrderType();
 					MapLocation target = unitOrder.getTargetLocation();
+
+					// Get the location of the unit and draw what type of action they did
+					Object actor = map.getObject(unitOrder.objectID);
+					// Only draw action types if the actor is a Unit and we have pressed the button
+					if (actor != null && actor instanceof Unit && showRejectedOrders) {
+						Unit actingUnit = (Unit) actor;
+						MapLocation actingUnitLocation = actingUnit.getLocation();
+						// Flip our Y-coordinate, since libGdx draws from bottom-left to top-right
+						int flippedY = (map.getMapHeight() - 1) - actingUnitLocation.getY();
+						// Calculate all our drawing coordinates
+						dh.calculateDrawCoordinates(actingUnitLocation.getX(), flippedY);
+
+						String visualOrderType = "";
+						switch (type) {
+						case ATTACK:
+							visualOrderType = "1";
+							break;
+						case ATTACK_SPECIAL:
+							visualOrderType = "19";
+							break;
+						case MOVE:
+							visualOrderType = "13";
+							break;
+						case ROTATE_CLOCKWISE:
+							visualOrderType = "18";
+							break;
+						case ROTATE_COUNTER_CLOCKWISE:
+							visualOrderType = "3";
+							break;
+						default:
+							break;
+						}
+
+						defaultFont.draw(batch, visualOrderType, dh.drawXBaseRes, dh.drawYBaseRes);
+					}
 
 					// We will need the order to have a target set, otherwise we can't draw anywhere
 					if (target != null && map.isOnMap(target)) {
@@ -442,8 +499,11 @@ public class HunterKillerRenderer
 				}
 			}
 
-			// Reset the correct color
+			// Restore original settings
 			batch.setColor(originalColor);
+			defaultFont.setColor(originalFontColor);
+			defaultFont.getData().scaleX = ogFontScaleX;
+			defaultFont.getData().scaleY = ogFontScaleY;
 		}
 
 		// Check if the value map needs to be rendered
