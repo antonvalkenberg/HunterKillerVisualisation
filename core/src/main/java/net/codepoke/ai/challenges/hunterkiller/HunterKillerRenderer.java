@@ -88,7 +88,11 @@ public class HunterKillerRenderer
 	private int ticks = 0;
 	private float timePassed;
 
+	/** These variables control whether or not we want to show additional visuals */
 	private boolean showRejectedOrders = false;
+	private boolean showFieldOfView = false;
+	private boolean showObjectIDs = false;
+	private boolean showValueMap = false;
 
 	public HunterKillerRenderer(MatchFrame<HunterKillerState, HunterKillerAction> parent, Skin skin) {
 		super(parent, skin);
@@ -142,11 +146,19 @@ public class HunterKillerRenderer
 
 		TextureRegion defaultFloor = skin.getRegion("map/floor_1");
 
-		// Go through the map to draw the map features first
-		boolean showID = Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Keys.CONTROL_RIGHT);
-
-		// Check if the toggle 'show rejected orders' was pressed
-		showRejectedOrders = Gdx.input.isKeyPressed(Keys.NUM_2);
+		// Check if any of the extra visuals should be toggled
+		if (Gdx.input.isKeyJustPressed(Keys.CONTROL_LEFT) || Gdx.input.isKeyJustPressed(Keys.CONTROL_RIGHT)) {
+			showObjectIDs = !showObjectIDs;
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.GRAVE)) {
+			showRejectedOrders = !showRejectedOrders;
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.ALT_LEFT)) {
+			showFieldOfView = !showFieldOfView;
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.NUM_1)) {
+			showValueMap = !showValueMap;
+		}
 
 		for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
 			for (int yCoord = 0; yCoord < map.getMapHeight(); yCoord++) {
@@ -154,8 +166,7 @@ public class HunterKillerRenderer
 				int flippedY = (map.getMapHeight() - 1) - yCoord;
 
 				// Check if this location should be tinted
-				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
-				tinted &= !Gdx.input.isKeyPressed(Keys.ALT_LEFT);
+				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY)) && showFieldOfView;
 
 				// Get the objects on this tile of the map
 				int mapPosition = map.toPosition(xCoord, flippedY);
@@ -182,7 +193,6 @@ public class HunterKillerRenderer
 				dh.calculateDrawCoordinates(xCoord, yCoord);
 
 				// Draw MapFeatures first, since Units are drawn on top of those
-
 				GameObject object = tile[HunterKillerConstants.MAP_INTERNAL_FEATURE_INDEX];
 
 				// Check if this position has been cached
@@ -190,9 +200,7 @@ public class HunterKillerRenderer
 					for (TextureRegion region : mapCache.get(mapPosition)) {
 						batch.draw(region, dh.drawX, dh.drawY, dh.tileWidth * dh.scaleX, dh.tileHeight * dh.scaleY);
 					}
-				}
-
-				else if (object instanceof Structure) {
+				} else if (object instanceof Structure) {
 
 					// Draw a default floor below the structure
 					batch.draw(defaultFloor, dh.drawX, dh.drawY, dh.tileWidth, dh.tileHeight);
@@ -222,8 +230,8 @@ public class HunterKillerRenderer
 
 						}
 
-						// Draw a Structure's controller-ID if CTRL is pressed
-						if (showID) {
+						// Draw a Structure's controller-ID if we are showing IDs
+						if (showObjectIDs) {
 							int controllerID = structure.getControllingPlayerID();
 							defaultFont.setColor(Color.GREEN);
 							defaultFont.draw(batch, "" + controllerID, dh.drawXBaseHP, dh.drawYBaseHP);
@@ -293,8 +301,7 @@ public class HunterKillerRenderer
 				int flippedY = (map.getMapHeight() - 1) - yCoord;
 
 				// Check if this location should be tinted
-				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY));
-				tinted &= !Gdx.input.isKeyPressed(Keys.ALT_LEFT);
+				boolean tinted = !fovSet.contains(new MapLocation(xCoord, flippedY)) && showFieldOfView;
 
 				// Save the original colors, so we can set them back later
 				Color originalColor = batch.getColor();
@@ -362,8 +369,8 @@ public class HunterKillerRenderer
 						defaultFont.draw(batch, "" + cd, dh.drawXUnitCD, dh.drawYUnitCD);
 					}
 
-					// Draw a Unit's ID if CTRL is pressed
-					if (showID) {
+					// Draw a Unit's ID if we are showing IDs
+					if (showObjectIDs) {
 						int unitID = unit.getID();
 						defaultFont.setColor(Color.GREEN);
 						defaultFont.draw(batch, "" + unitID, dh.drawXBaseHP, dh.drawYBaseHP);
@@ -507,7 +514,7 @@ public class HunterKillerRenderer
 		}
 
 		// Check if the value map needs to be rendered
-		if (valueMap != null && Gdx.input.isKeyPressed(Keys.NUM_1)) {
+		if (valueMap != null && showValueMap) {
 
 			// Go through the map to draw the map features first
 			for (int xCoord = 0; xCoord < map.getMapWidth(); xCoord++) {
