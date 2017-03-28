@@ -23,14 +23,14 @@ import net.codepoke.ai.network.AIBot;
  * @author Anton Valkenberg (anton.valkenberg@gmail.com)
  *
  */
-public class RandomBot
+public class SlightlyRandomBot
 		extends AIBot<HunterKillerState, HunterKillerAction> {
 
 	private static Random r = new Random();
 	private static final double noUnitOrderThreshold = 0.2;
 	private static final double noBaseOrderThreshold = 0.1;
 
-	public RandomBot() {
+	public SlightlyRandomBot() {
 		super("", HunterKillerState.class, HunterKillerAction.class);
 	}
 

@@ -20,10 +20,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 
@@ -32,28 +28,29 @@ public class DesktopLauncher {
 	public static void main(String[] arg) throws URISyntaxException {
 
 		// Create the packed asset atlas
-		TexturePacker.Settings settings = new TexturePacker.Settings();
-		settings.maxHeight = 2048;
-		settings.maxWidth = 2048;
-		settings.useIndexes = true;
-		settings.paddingX = settings.paddingY = 1;
-		settings.edgePadding = true;
-		settings.bleed = true;
-		settings.filterMin = TextureFilter.MipMapNearestNearest;
-		settings.filterMag = TextureFilter.MipMapNearestNearest;
+		// TexturePacker.Settings settings = new TexturePacker.Settings();
+		// settings.maxHeight = 2048;
+		// settings.maxWidth = 2048;
+		// settings.useIndexes = true;
+		// settings.paddingX = settings.paddingY = 1;
+		// settings.edgePadding = true;
+		// settings.bleed = true;
+		// settings.filterMin = TextureFilter.MipMapNearestNearest;
+		// settings.filterMag = TextureFilter.MipMapNearestNearest;
 		// TexturePacker.process(settings, "imgs/", System.getProperty("user.dir"), "game.atlas");
 
 		// Start up the game
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.forceExit = true;
-
-		final HunterKillerVisualization listener = new HunterKillerVisualization();
-
-		new LwjglApplication(listener, config);
+		// LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		// config.forceExit = true;
+		//
+		// final HunterKillerVisualization listener = new HunterKillerVisualization();
+		//
+		// new LwjglApplication(listener, config);
 
 		// testStream(listener, "ai.codepoke.net/competition/stream_match", "HunterKiller",
 		// "HunterKiller-ombgo2vplhttkovn10kctb8i87-0");
-		simulateStream(listener);
+		// simulateStream(listener);
+		simulateWithoutVisuals();
 	}
 
 	private static void testStream(final HunterKillerVisualization listener, final String server, final String gameName,
@@ -118,7 +115,7 @@ public class DesktopLauncher {
 
 				HunterKillerState orgState = state.copy();
 
-				RandomBot randomBot = new RandomBot(); // Instantiate your bot here
+				SlightlyRandomBot randomBot = new SlightlyRandomBot(); // Instantiate your bot here
 
 				Json json = new Json();
 
@@ -143,6 +140,35 @@ public class DesktopLauncher {
 
 			}
 		}.start();
+	}
+
+	public static void simulateWithoutVisuals() {
+
+		for (int i = 0; i < 100; i++) {
+
+			new Thread() {
+				public void run() {
+
+					GameRules<HunterKillerState, HunterKillerAction> rules = new HunterKillerRules();
+
+					HunterKillerState state = new HunterKillerStateFactory().generateInitialState(new String[] { "A", "B", "C", "D" }, null);
+
+					SlightlyRandomBot randomBot = new SlightlyRandomBot();
+
+					Result result;
+					do {
+						HunterKillerState copyState = state.copy();
+						copyState.prepare(state.getActivePlayerID());
+						result = rules.handle(state, randomBot.handle(copyState));
+
+					} while (!result.isFinished() && result.isAccepted());
+
+					System.out.println("Finished a game");
+
+				}
+			}.start();
+
+		}
 	}
 
 }
